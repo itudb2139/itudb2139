@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Your{% endblock %}
+{% block content %}
+    <h2>Fill the information below</h2>
+    <form action="{{ url_for('handle_data') }}" method="POST">
+        <label for="first_name">First name:</label>
+        <input type="text" id="first_name" placeholder="Leyla" name="first_name"><br>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" placeholder="Mammadova" name="last_name"><br>
+
+        <label for="gender">Gender:</label><br>
+        <div id="gender" class="gender">
+            <label for="female">Female</label>
+            <input type="radio" id="female" name="gender" value="female"><br>
+            <label for="male">Male</label> 
+            <input type="radio" id="male" name="gender" value="male"><br>
+        </div>
+
+        <label for="country">Your country:</label><br>
+        <select id="country" name="country">
+            {% for country in countries %}
+            <option value="{{ country[0] }}">{{ country[0] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="birthday">Your birthday:</label><br>
+        <input type="date" id="birthday" name="birthday"><br>
+
+        <button type="submit">Submit</button>
+    </form>
+    
+
+{% endblock %}
