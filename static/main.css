@@ -1,0 +1,8 @@
+.button_group button{
+    background-color: aqua;
+    border: 1px solid blue;
+    color: black;
+    padding: 10px 24px;
+    cursor: pointer;
+    float: left;
+}

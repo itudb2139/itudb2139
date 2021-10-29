@@ -6,6 +6,18 @@
         <link rel="stylesheet" href="/static/main.css"/>
       </head>
       <body>
+        <h1><div class = "button_group" style = "width: 100%">
+            <form method = "get" action = "/">
+                <button type = "submit">Home</button>
+            </form>
+            <form method = "get" action = "/statistics">
+                <button type = "submit">Statistics</button>
+            </form>
+            <form method = "get" action = "/your-page">
+                <button type = "submit">Your Page</button>
+            </form>
+        </div>
+        </h1><br><br>
         {% block content %}{% endblock %}
     
         <footer>
