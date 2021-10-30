@@ -6,3 +6,7 @@
     cursor: pointer;
     float: left;
 }
+
+.error{
+    color: red;
+}
