@@ -10,6 +10,7 @@ class Database:
             query = "INSERT INTO users (NAME, LAST_NAME, GENDER, COUNTRY, BIRTHDAY, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(query, (first_name, last_name, gender, country, birthday, email, password_hash))
             connection.commit()
+        return cursor.lastrowid
 
     def update_user(self, id, name, last_name, gender, country, birthday, email, password):
         with sqlite3.connect(self.dbfile) as connection:
