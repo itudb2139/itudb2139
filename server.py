@@ -1,12 +1,18 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
-from hashlib import sha256
+import bcrypt
+from flask_login import LoginManager, login_user, current_user
+from database import Database
+import login
+import datetime
 
 app = Flask(__name__)
 
+app.secret_key = "81b8316d99a3337cdf36791702a2a2e36296ffc0b531c2cd46ff1926abc1076c"
+
 @app.route("/")
 def home_page():
-    return render_template("home.html")
+    return render_template("home.html", current_user=current_user)
 
 @app.route("/statistics")
 def stats_page():
@@ -14,12 +20,13 @@ def stats_page():
 
 @app.route("/your-page")
 def your_page():
-    return render_template("yourPage.html", login = False)
+    age = calculate_age(current_user.data['birthday'])
+    return render_template("yourPage.html", current_user=current_user, age=age)
 
 @app.route("/form")
 def form_page():
     values = {}
-    return render_template("form.html", countries=get_countries(), values=values)
+    return render_template("form.html", countries=Database().get_countries(), values=values, handler="handle_data")
 
 @app.route("/log_in")
 def login_page():
@@ -75,11 +82,11 @@ def validate_registration(form):
 def handle_data():
     if request.method == "GET":
         values = {'first_name':"", 'last_name':"", 'gender':"", 'country':"", 'birthday':"", 'email':"", 'password':""}
-        return render_template("form.html", countries=get_countries(), values = values)
+        return render_template("form.html", countries=Database().get_countries(), values = values, handler="handle_data")
     else:
         valid = validate_registration(request.form)
         if not valid:
-            return render_template("form.html", countries=get_countries(), values = request.form)
+            return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_data")
         user_first_name = request.form.data['first_name']
         user_last_name = request.form.data['last_name']
         user_gender = request.form.get('gender', '')
@@ -88,61 +95,49 @@ def handle_data():
         user_email = request.form.data['email']
         user_password = request.form.data['password']
         hash1 = create_hash(user_password)
-        add_user(user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email, hash1)
-        return render_template("yourPage.html", login = True, name = user_first_name)
+        new_id = Database().add_user(user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email, hash1)
+        login_user(login.load_user(new_id))
+        user_age = calculate_age(user_birthday)
+        return render_template("yourPage.html", current_user=current_user, age=user_age)
+
 
 @app.route("/handle_login", methods=['POST'])
 def handle_login():
     user_email = request.form['email']
     user_password = request.form['password']
-    hash_password = create_hash(user_password)
-    hash2 = get_password(user_email)
-    if hash2 == None:
-        hash2 = ('',)
-    if hash_password == hash2[0]:
-        user_name = get_name(user_email)
-        return render_template("yourPage.html", login = True, name = user_name[0])
+    hash_pw = Database().get_password(user_email)
+    if hash_pw == None:
+        return render_template("login.html", error = True)
+
+    if(check_password(user_password, hash_pw[0])):
+        user_data = Database().get_user(user_email, parameter="EMAIL")
+        user_id = user_data[0]
+        login_user(login.load_user(user_id))
+        user_age = calculate_age(current_user.data['birthday'])
+        return render_template("yourPage.html", current_user=current_user, age=user_age)
     else:
         return render_template("login.html", error = True)
 
 
-def create_connection():
-    connection = sqlite3.connect("pythonsqlite.db")
-    cursor = connection.cursor()
-    return connection
-
 def create_hash(password):
-    pw_bytestring = password.encode()
-    return sha256(pw_bytestring).hexdigest()
+    pw_hash = bcrypt.hashpw(bytes(password, encoding="utf-8"), bcrypt.gensalt())
+    return pw_hash
 
-def add_user(first_name, last_name, gender, country, birthday, email, password_hash):
-    conn = create_connection()
-    cursor = conn.cursor()
-    query = "INSERT INTO users (NAME, LAST_NAME, GENDER, COUNTRY, BIRTHDAY, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    cursor.execute(query, (first_name, last_name, gender, country, birthday, email, password_hash))
-    conn.commit()
-    return cursor.lastrowid
+def check_password(password, pw_hash):
+    return bcrypt.checkpw(bytes(password, encoding="utf-8"), pw_hash)
 
-def get_password(email):
-    conn = create_connection()
-    cursor = conn.cursor()
-    query = "SELECT PASSWORD FROM users WHERE (EMAIL = ?)"
-    cursor.execute(query, (email,))
-    return cursor.fetchone()
-
-def get_name(email):
-    conn = create_connection()
-    cursor = conn.cursor()
-    query = "SELECT NAME FROM users WHERE (EMAIL = ?)"
-    cursor.execute(query, (email,))
-    return cursor.fetchone()
-
-def get_countries():
-    conn = create_connection()
-    cursor = conn.cursor()
-    query = "SELECT DISTINCT country FROM total_fertility"
-    cursor.execute(query)
-    return cursor.fetchall()
+def calculate_age(birthday):
+    today = datetime.date.today()
+    birthday_obj = datetime.datetime.strptime(birthday, "%Y-%m-%d").date()
+    this_year_bday = datetime.date(today.year, birthday_obj.month, birthday_obj.day)
+    if this_year_bday < today:
+        years = today.year - birthday_obj.year
+    else:
+        years = today.year - birthday_obj.year - 1
+    return years
 
 if __name__ == "__main__":
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.user_loader(login.load_user)
     app.run(host="0.0.0.0", port=8080, debug=True)

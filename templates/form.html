@@ -2,7 +2,7 @@
 {% block title %}Your{% endblock %}
 {% block content %}
     <h3>Fill the information below</h3>
-    <form action="{{ url_for('handle_data') }}" method="POST">
+    <form action="{{ url_for(handler) }}" method="POST">
         <label for="first_name">First name:</label>
         <input type="text" id="first_name" placeholder="Leyla" name="first_name" value="{{ values['first_name'] }}"><br>
         {% if 'first_name' in values.errors %}

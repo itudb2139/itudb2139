@@ -1,14 +1,19 @@
 {% extends "layout.html" %}
 {% block title %}Your{% endblock %}
 {% block content %}
-    {% if login == False %}
+    {% if not current_user.is_authenticated %}
         <p>You are not logged in</p>
         <a href="/log_in">Log in</a><br>
         <a href="/form">Sign up</a>
-    {% endif %}
 
-    {% if login == True %}
-        <h3>Welcome, {{ name }}</h3>
+    {% else %}
+        <h3>Welcome, {{ current_user.data['name'] }}</h3>
+        <p class = "profile"><b>Your profile:</b><br>
+        Full name: {{ current_user.data['name'] }} {{ current_user.data['last_name'] }}<br>
+        Gender: {{ current_user.data['gender'] }}<br>
+        Country: {{ current_user.data['country'] }}<br>
+        Age: {{ age }}<br>
+        Email: {{ current_user.data['email'] }}</p>
     {% endif %}
 
 {% endblock %}
