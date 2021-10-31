@@ -12,11 +12,11 @@ class Database:
             connection.commit()
         return cursor.lastrowid
 
-    def update_user(self, id, name, last_name, gender, country, birthday, email, password):
+    def update_user(self, id, name, last_name, gender, country, birthday, email):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "UPDATE users SET NAME = ?, LAST_NAME = ?, GENDER = ?, COUNTRY = ?, BIRTHDAY = ?, EMAIL = ?, PASSWORD = ? WHERE (ID = ?)"
-            cursor.execute(query, (name, last_name, gender, country, birthday, email, password, id))
+            query = "UPDATE users SET NAME = ?, LAST_NAME = ?, GENDER = ?, COUNTRY = ?, BIRTHDAY = ?, EMAIL = ? WHERE (ID = ?)"
+            cursor.execute(query, (name, last_name, gender, country, birthday, email, id))
             connection.commit()
 
     def delete_user(self, id):

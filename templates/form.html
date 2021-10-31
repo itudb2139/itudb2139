@@ -55,12 +55,20 @@
         </p>
         {% endif %}
 
+        {% if handler == "handle_edit" %}
+        <p><i>Enter your password for confirmation</i></p>
+        {% endif %}
+
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" value="{{ values['password'] }}"><br>
         {% if 'password' in values.errors %}
         <p class = "error">
             {{ values.errors['password'] }}
         </p>
+        {% endif %}
+
+        {% if error == True %}
+        <p class="error">Wrong password</p>
         {% endif %}
 
         <button type="submit">Submit</button>

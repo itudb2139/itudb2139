@@ -32,6 +32,10 @@ def form_page():
 def login_page():
     return render_template("login.html")
 
+@app.route("/edit")
+def edit_page():
+    return render_template("form.html", countries=Database().get_countries(), values=current_user.data, handler="handle_edit")
+
 
 def validate_registration(form):
     form.data = {}
@@ -117,6 +121,28 @@ def handle_login():
         return render_template("yourPage.html", current_user=current_user, age=user_age)
     else:
         return render_template("login.html", error = True)
+
+@app.route("/handle_edit", methods=['POST'])
+def handle_edit():
+    valid = validate_registration(request.form)
+    if not valid:
+        return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit")
+    user_first_name = request.form.data['first_name']
+    user_last_name = request.form.data['last_name']
+    user_gender = request.form.get('gender', '')
+    user_country = request.form.data['country']
+    user_birthday = request.form.data['birthday']
+    user_email = request.form.data['email']
+
+    user_password = request.form.data['password']
+    hash_pw = Database().get_password(current_user.data['email'])
+    if (check_password(user_password, hash_pw[0])):
+        Database().update_user(current_user.data['id'], user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email)
+        current_user.update_data()
+        user_age = calculate_age(user_birthday)
+        return render_template("yourPage.html", current_user=current_user, age=user_age)
+    else:
+        return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit", error = True)
 
 
 def create_hash(password):
