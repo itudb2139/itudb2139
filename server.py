@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import bcrypt
-from flask_login import LoginManager, login_user, current_user
+from flask_login import LoginManager, login_user, current_user, logout_user
 from database import Database
 import login
 import datetime
@@ -20,7 +20,9 @@ def stats_page():
 
 @app.route("/your-page")
 def your_page():
-    age = calculate_age(current_user.data['birthday'])
+    age = 0
+    if current_user.is_authenticated:
+        age = calculate_age(current_user.data['birthday'])
     return render_template("yourPage.html", current_user=current_user, age=age)
 
 @app.route("/form")
@@ -35,6 +37,11 @@ def login_page():
 @app.route("/edit")
 def edit_page():
     return render_template("form.html", countries=Database().get_countries(), values=current_user.data, handler="handle_edit")
+
+@app.route("/logout")
+def log_out():
+    logout_user()
+    return render_template("yourPage.html", current_user=current_user)
 
 
 def validate_registration(form):

@@ -15,6 +15,11 @@
         Age: {{ age }}<br>
         Email: {{ current_user.data['email'] }}<br>
         <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
+        <div class="button_group">
+            <form method = "get" action = "/logout">
+                <button type = "submit">Sign Out</button>
+            </form><br><br><br>
+        </div>
         
     {% endif %}
 
