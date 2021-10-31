@@ -1,0 +1,12 @@
+Week 1:
+-Created and imported database
+-HTML pages created, including home page
+-Navigation between the pages added
+-Registration form added
+-Input processing added
+-Sign up and Log in forms modified
+-Database class created and methods to access and modify database added
+-Login and Signup systems handled
+-Function to calculate age from birthday added
+-Method to update user data in the database implemented
+-Sign Out is implemented
