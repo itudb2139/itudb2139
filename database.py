@@ -1,4 +1,5 @@
-import sqlite3 
+import sqlite3
+from sqlite3.dbapi2 import Cursor 
 
 class Database:
     def __init__(self, dbfile = r"pythonsqlite.db"):
@@ -29,7 +30,7 @@ class Database:
     def get_countries(self):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "SELECT DISTINCT country FROM total_fertility"
+            query = "SELECT DISTINCT COUNTRY FROM total_fertility"
             cursor.execute(query)
         return cursor.fetchall()
 
@@ -45,4 +46,11 @@ class Database:
             cursor = connection.cursor()
             query = "SELECT * FROM users WHERE ({} = ?)".format(parameter) 
             cursor.execute(query, (value,))
+        return cursor.fetchone()
+
+    def get_fertility(self, country):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM total_fertility WHERE (COUNTRY = ? AND YEAR = 2020)"
+            cursor.execute(query, (country, ))
         return cursor.fetchone()

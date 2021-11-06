@@ -1,7 +1,19 @@
 {% extends "layout.html" %}
 {% block title %}Statistics{% endblock %}
 {% block content %}
-    <h3>Welcome</h3>
-    <p>Not available at the moment</p>
+
+    {% if not current_user.is_authenticated %}
+        <p>Looks like you don't have an account</p>
+        <a href="/log_in">Log in</a><br>
+        <a href="/form">Sign up</a>
+    {% else %}
+
+        <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
+        <p><b>Your Statistics:</b><br>
+        Approximate number of siblings: {{ fertility }}<br>
+
+        </p>
+
+    {% endif %}
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import bcrypt
-from flask_login import LoginManager, login_user, current_user, logout_user
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from database import Database
 import login
 import datetime
@@ -15,8 +15,11 @@ def home_page():
     return render_template("home.html", current_user=current_user)
 
 @app.route("/statistics")
+@login_required
 def stats_page():
-    return render_template("statistics.html")
+    country = current_user.data['country']
+    fertility, = Database().get_fertility(country=country)
+    return render_template("statistics.html", current_user=current_user, fertility=fertility)
 
 @app.route("/your-page")
 def your_page():
@@ -173,4 +176,5 @@ if __name__ == "__main__":
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.user_loader(login.load_user)
+    login_manager.login_view = "login_page"
     app.run(host="0.0.0.0", port=8080, debug=True)
