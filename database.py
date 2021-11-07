@@ -54,3 +54,22 @@ class Database:
             query = "SELECT VALUE FROM total_fertility WHERE (COUNTRY = ? AND YEAR = 2020)"
             cursor.execute(query, (country, ))
         return cursor.fetchone()
+
+    def is_applicable(self, age, table):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT DISTINCT AGE_GROUP FROM {}".format(table)
+            cursor.execute(query)
+            groups = cursor.fetchall()
+        for group in groups:
+            limits = group[0].split("-")
+            if age >= int(limits[0]) and age <= int(limits[1]):
+                return True
+        return False
+        
+    def get_tobacco_use(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM tobacco_use WHERE (COUNTRY = ? AND SEX = ?) ORDER BY YEAR DESC"
+            cursor.execute(query, (country, sex))
+        return cursor.fetchone()
