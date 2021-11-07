@@ -10,3 +10,13 @@ Week 1:
 -Function to calculate age from birthday added
 -Method to update user data in the database implemented
 -Sign Out is implemented
+
+Week 2:
+-More tables created and datasets imported
+-Login requirements added to the statistics page
+-HTML page for logging in and signing up is separated
+-Method added to the database to determine whether data is applicable to the current user
+-Methods added to get the required values from the database
+-More values added to statistics page
+-Adjustments made in gender values in SignUp form to match the column names of the database tables
+-Adjustments made to LogOut page to return to Home page
