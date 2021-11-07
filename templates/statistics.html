@@ -5,6 +5,9 @@
     <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
     <p><b>Your Statistics:</b><br>
     Approximate number of siblings: {{ fertility }}<br>
+    {% if is_applicable(current_user.age, "tobacco_use") %}
+      {{ tobacco_use }}% of the people you know use tobacco.
+    {% endif %}
     </p>
 
     <p>How accurate is the information above? <a href="/statistics_form">Let us know</a></p>

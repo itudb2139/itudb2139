@@ -4,7 +4,6 @@ import bcrypt
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from database import Database
 import login
-import datetime
 
 app = Flask(__name__)
 
@@ -19,13 +18,14 @@ def home_page():
 def stats_page():
     country = current_user.data['country']
     fertility, = Database().get_fertility(country=country)
-    return render_template("statistics.html", current_user=current_user, fertility=fertility)
+
+    tobacco_use, = Database().get_tobacco_use(current_user.data['country'], current_user.data['gender'])
+    return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, tobacco_use=tobacco_use)
 
 @app.route("/your-page")
 @login_required
 def your_page():
-    age = calculate_age(current_user.data['birthday'])
-    return render_template("yourPage.html", current_user=current_user, age=age)
+    return render_template("yourPage.html", current_user=current_user)
 
 @app.route("/form")
 def form_page():
@@ -43,7 +43,7 @@ def edit_page():
 @app.route("/logout")
 def log_out():
     logout_user()
-    return render_template("yourPage.html", current_user=current_user)
+    return render_template("home.html", current_user=current_user)
 
 @app.route("/no_account")
 def no_account_page():
@@ -118,8 +118,7 @@ def handle_data():
         hash1 = create_hash(user_password)
         new_id = Database().add_user(user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email, hash1)
         login_user(login.load_user(new_id))
-        user_age = calculate_age(user_birthday)
-        return render_template("yourPage.html", current_user=current_user, age=user_age)
+        return render_template("yourPage.html", current_user=current_user)
 
 
 @app.route("/handle_login", methods=['POST'])
@@ -134,8 +133,7 @@ def handle_login():
         user_data = Database().get_user(user_email, parameter="EMAIL")
         user_id = user_data[0]
         login_user(login.load_user(user_id))
-        user_age = calculate_age(current_user.data['birthday'])
-        return render_template("yourPage.html", current_user=current_user, age=user_age)
+        return render_template("yourPage.html", current_user=current_user)
     else:
         return render_template("login.html", error = True)
 
@@ -156,8 +154,7 @@ def handle_edit():
     if (check_password(user_password, hash_pw[0])):
         Database().update_user(current_user.data['id'], user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email)
         current_user.update_data()
-        user_age = calculate_age(user_birthday)
-        return render_template("yourPage.html", current_user=current_user, age=user_age)
+        return render_template("yourPage.html", current_user=current_user)
     else:
         return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit", error = True)
 
@@ -169,15 +166,6 @@ def create_hash(password):
 def check_password(password, pw_hash):
     return bcrypt.checkpw(bytes(password, encoding="utf-8"), pw_hash)
 
-def calculate_age(birthday):
-    today = datetime.date.today()
-    birthday_obj = datetime.datetime.strptime(birthday, "%Y-%m-%d").date()
-    this_year_bday = datetime.date(today.year, birthday_obj.month, birthday_obj.day)
-    if this_year_bday < today:
-        years = today.year - birthday_obj.year
-    else:
-        years = today.year - birthday_obj.year - 1
-    return years
 
 if __name__ == "__main__":
     login_manager = LoginManager()
