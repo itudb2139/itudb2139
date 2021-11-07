@@ -22,10 +22,9 @@ def stats_page():
     return render_template("statistics.html", current_user=current_user, fertility=fertility)
 
 @app.route("/your-page")
+@login_required
 def your_page():
-    age = 0
-    if current_user.is_authenticated:
-        age = calculate_age(current_user.data['birthday'])
+    age = calculate_age(current_user.data['birthday'])
     return render_template("yourPage.html", current_user=current_user, age=age)
 
 @app.route("/form")
@@ -45,6 +44,14 @@ def edit_page():
 def log_out():
     logout_user()
     return render_template("yourPage.html", current_user=current_user)
+
+@app.route("/no_account")
+def no_account_page():
+    return render_template("no_account.html")
+
+@app.route("/statistics_form")
+def statistics_form():
+    return render_template("statistics_form.html")
 
 
 def validate_registration(form):
@@ -176,5 +183,5 @@ if __name__ == "__main__":
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.user_loader(login.load_user)
-    login_manager.login_view = "login_page"
+    login_manager.login_view = "no_account_page"
     app.run(host="0.0.0.0", port=8080, debug=True)
