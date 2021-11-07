@@ -1,4 +1,5 @@
 from database import Database
+import datetime
 
 class user_login:
     def __init__(self, data) -> None:
@@ -41,6 +42,17 @@ class user_login:
                 "birthday": data[5],
                 "email": data[6]
             }
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        birthday_obj = datetime.datetime.strptime(self.data['birthday'], "%Y-%m-%d").date()
+        this_year_bday = datetime.date(today.year, birthday_obj.month, birthday_obj.day)
+        if this_year_bday < today:
+            years = today.year - birthday_obj.year
+        else:
+            years = today.year - birthday_obj.year - 1
+        return years
 
 def load_user(user_id):
     return user_login(Database().get_user(user_id,"ID"))
