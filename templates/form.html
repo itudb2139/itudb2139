@@ -22,9 +22,9 @@
         <label for="gender">Gender:</label><br>
         <div id="gender" class="gender">
             <label for="female">Female</label>
-            <input type="radio" id="female" name="gender" value="female" {% if values['gender'] == "female" %}checked{% endif %}><br>
+            <input type="radio" id="female" name="gender" value="Female" {% if values['gender'] == "female" %}checked{% endif %}><br>
             <label for="male">Male</label> 
-            <input type="radio" id="male" name="gender" value="male" {% if values['gender'] == "male" %}checked{% endif %}><br>
+            <input type="radio" id="male" name="gender" value="Male" {% if values['gender'] == "male" %}checked{% endif %}><br>
             {% if 'gender' in values.errors %}
             <p class = "error">
                 {{ values.errors['gender'] }}
