@@ -1,26 +1,20 @@
 {% extends "layout.html" %}
 {% block title %}Your{% endblock %}
 {% block content %}
-    {% if not current_user.is_authenticated %}
-        <p>You are not logged in</p>
-        <a href="/log_in">Log in</a><br>
-        <a href="/form">Sign up</a>
 
-    {% else %}
-        <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
-        <p class = "profile"><b>Your profile:</b><br>
-        Full name: {{ current_user.data['first_name'] }} {{ current_user.data['last_name'] }}<br>
-        Gender: {{ current_user.data['gender'] }}<br>
-        Country: {{ current_user.data['country'] }}<br>
-        Age: {{ age }}<br>
-        Email: {{ current_user.data['email'] }}<br>
-        <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
-        <div class="button_group">
-            <form method = "get" action = "/logout">
-                <button type = "submit">Sign Out</button>
-            </form><br><br><br>
-        </div>
+    <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
+    <p class = "profile"><b>Your profile:</b><br>
+    Full name: {{ current_user.data['first_name'] }} {{ current_user.data['last_name'] }}<br>
+    Gender: {{ current_user.data['gender'] }}<br>
+    Country: {{ current_user.data['country'] }}<br>
+    Age: {{ age }}<br>
+    Email: {{ current_user.data['email'] }}<br>
+    <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
+    <div class="button_group">
+        <form method = "get" action = "/logout">
+            <button type = "submit">Sign Out</button>
+        </form><br><br><br>
+    </div>
         
-    {% endif %}
 
 {% endblock %}
