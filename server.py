@@ -17,10 +17,35 @@ def home_page():
 @login_required
 def stats_page():
     country = current_user.data['country']
+    gender = current_user.data['gender']
+
     fertility, = Database().get_fertility(country=country)
 
-    tobacco_use = Database().get_tobacco_use(current_user.data['country'], current_user.data['gender'])
-    return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, tobacco_use=tobacco_use)
+    tobacco_use = Database().get_tobacco_use(country=country, sex=gender)
+
+    tuberculosis_rate = Database().get_tuberculosis(country=country, sex=gender, age=current_user.age)
+
+    hepb = Database().get_hepb(country=country, sex=gender, age=current_user.age)
+
+    education = Database().get_education(country=country, sex=gender)
+
+    poverty = Database().get_poverty(country=country)
+
+    life_expectancy_birth = Database().get_life_expectancy_birth(country=country, sex=gender)
+
+    life_expectancy_old = Database().get_life_expectancy_60(country=country, sex=gender)
+
+    physical_activity = Database().get_physical_activity(country=country, sex=gender)
+
+    drinking = Database().get_drinking(country=country, sex=gender)
+
+    sanitation = Database().get_sanitation_services(country=country)
+
+    water = Database().get_water_services(country=country)
+
+    adolescent_mortality = Database().get_adolescent_mortality(country=country, sex=gender, age=current_user.age)
+
+    return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality)
 
 @app.route("/your-page")
 @login_required

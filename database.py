@@ -62,8 +62,7 @@ class Database:
             cursor.execute(query)
             groups = cursor.fetchall()
         for group in groups:
-            limits = group[0].split("-")
-            if age >= int(limits[0]) and age <= int(limits[1]):
+            if(is_age_in_range(age, group[0])):
                 return True
         return False
         
@@ -76,3 +75,132 @@ class Database:
         if result == None:
             return None
         return result[0]
+
+    def get_tuberculosis(self, country, sex, age):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE, AGE_GROUP FROM tuberculosis_rate WHERE (COUNTRY = ? AND SEX = ?)"
+            cursor.execute(query, (country, sex))
+            groups = cursor.fetchall()
+            group_total = 0
+            group_count = 0
+            for group in groups:
+                if is_age_in_range(age, group[1]):
+                    return group[0] / 1000
+                else:
+                    group_total += group[0]
+                group_count = group_count + 1
+            return group_total / (group_count * 1000)
+
+    def get_hepb(self, country, sex, age):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE, AGE_GROUP FROM hepb_rate WHERE (COUNTRY = ? AND SEX = ?)"
+            cursor.execute(query, (country, sex))
+            groups = cursor.fetchall()
+            group_total = 0
+            group_count = 0
+            for group in groups:
+                if is_age_in_range(age, group[1]):
+                    return group[0] / 1000
+                else:
+                    group_total += group[0]
+                group_count = group_count + 1
+            return group_total / (group_count * 1000)
+
+    def get_education(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM young_education WHERE (COUNTRY = ? AND SEX = ?) ORDER BY YEAR DESC"
+            cursor.execute(query, (country, sex))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_poverty(self, country):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM population_poverty WHERE (COUNTRY = ?) ORDER BY YEAR DESC"
+            cursor.execute(query, (country,))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_life_expectancy_birth(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM life_expectancy_birth WHERE (COUNTRY = ? AND SEX = ? AND YEAR = 2021)"
+            cursor.execute(query, (country, sex))
+        return cursor.fetchone()[0]
+
+    def get_life_expectancy_60(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM life_expectancy_old WHERE (COUNTRY = ? AND SEX = ?)"
+            cursor.execute(query, (country, sex))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_physical_activity(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM physical_activity_adolescents WHERE (COUNTRY = ? AND SEX = ?) ORDER BY YEAR DESC"
+            cursor.execute(query, (country, sex))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_drinking(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM drinking_adolescents WHERE (COUNTRY = ? AND SEX = ?)"
+            cursor.execute(query, (country, sex))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_sanitation_services(self, country):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM sanitation_services WHERE (COUNTRY = ?) ORDER BY YEAR DESC, RESIDENCE_AREA"
+            cursor.execute(query, (country,))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_water_services(self, country):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM water_services WHERE (COUNTRY = ?) ORDER BY YEAR DESC, RESIDENCE_AREA"
+            cursor.execute(query, (country,))
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]
+
+    def get_adolescent_mortality(self, country, sex, age):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE, AGE_GROUP FROM adolescents_mortality_rate WHERE (COUNTRY = ? AND SEX = ?)"
+            cursor.execute(query, (country, sex))
+            groups = cursor.fetchall()
+            if groups == None:
+                return None
+            for group in groups:
+                if is_age_in_range(age, group[1]):
+                    return group[0] / 1000
+            return None
+
+
+def is_age_in_range(age, group):
+    if "+" in group:
+        return age >= int(group.replace("+", ""))
+    limits = group.split("-")
+    return age >= int(limits[0]) and age <= int(limits[1])

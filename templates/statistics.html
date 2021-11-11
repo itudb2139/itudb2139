@@ -6,6 +6,50 @@
     <p><b>Your Statistics:</b><br>
     Approximate number of siblings: {{ fertility }}<br>
 
+    You are expected to live until the age of {{ life_expectancy_birth }}.<br>
+
+    {% if is_applicable(current_user.age, "adolescents_mortality_rate") %}
+        {% if adolescent_mortality == None %}
+            Data about adolescent mortality rate is not available in your country.<br>
+        {% else %}
+            There is {{ adolescent_mortality }}% probability that you die before reaching the age of 20.<br>
+        {% endif %}
+    {% endif %}
+
+    {% if life_expectancy_old == None %}
+        Data about life expectancy after 60 is not available in your country.<br>
+    {% else %}
+        Provided that you live until 60 years old, you are expected to live until the age of {{ life_expectancy_old + 60 }}.<br>
+    {% endif %}
+
+    {% if is_applicable(current_user.age, "tuberculosis_rate") %}
+        The chance of you getting tuberculois: {{ tuberculosis }}%<br>
+    {% else %}
+        The chance of you getting tuberculosis after 60 years old: {{ tuberculosis }}%<br>
+    {% endif %}
+
+    {% if is_applicable(current_user.age, "hepb_rate") %}
+        The chance of you getting acute Hepatitis B: {{ hepb }}%<br>
+    {% else %}
+        The chance of you getting acute Hepatitis B after 60 years old: {{ hepb }}%<br>
+    {% endif %}
+
+    {% if current_user.age >= 15 and current_user.age <= 24 %}
+        {% if education == None %}
+            Data about education, employment or training is not available in your country.<br>
+        {% else %}
+            There is {{ education }}% chance that you are currently not in education, employment or training.<br>
+        {% endif %}
+    {% endif %}
+
+    {% if current_user.age >= 11 and current_user.age <= 17 %}
+        {% if physical_activity == None %}
+            Data about physical activity in adolescents is not available in your country.<br>
+        {% else %}
+            There is {{ physical_activity }}% chance that you are getting insufficient physical activity.<br>
+        {% endif %}
+    {% endif %}
+
     {% if is_applicable(current_user.age, "tobacco_use") %}
         {% if tobacco_use == None %}
             Tobacco use data not available in your country. <br>
@@ -14,7 +58,31 @@
         {% endif %}
     {% endif %}
 
-    
+    {% if current_user.age >= 15 and current_user.age <= 19 %}
+        {% if physical_activity == None %}
+            Data about adolescent drinking is not available in your country.<br>
+        {% else %}
+            {{ drinking }}% of the people you know are drinking.<br>
+        {% endif %}
+    {% endif %}
+
+    {% if poverty == None %}
+        Data about economic status of your country is not available.<br>
+    {% else %}
+        There is {{ 100 - poverty }}% chance that you live above the international poverty line.<br>
+    {% endif %}
+
+    {% if sanitation == None %}
+        Data about basic sanitation services is not available in your country.<br>
+    {% else %}
+        There is {{ sanitation }}% chance you are using at least basic sanitation services.<br>
+    {% endif %}
+
+    {% if water == None %}
+        Data about basic drinking water services is not available in your country.<br>
+    {% else %}
+        There is {{ water }}% chance you are using at least basic water drinking services.<br>
+    {% endif %}
 
     </p>
 
