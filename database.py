@@ -72,4 +72,7 @@ class Database:
             cursor = connection.cursor()
             query = "SELECT VALUE FROM tobacco_use WHERE (COUNTRY = ? AND SEX = ?) ORDER BY YEAR DESC"
             cursor.execute(query, (country, sex))
-        return cursor.fetchone()
+        result = cursor.fetchone()
+        if result == None:
+            return None
+        return result[0]

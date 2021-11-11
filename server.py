@@ -19,7 +19,7 @@ def stats_page():
     country = current_user.data['country']
     fertility, = Database().get_fertility(country=country)
 
-    tobacco_use, = Database().get_tobacco_use(current_user.data['country'], current_user.data['gender'])
+    tobacco_use = Database().get_tobacco_use(current_user.data['country'], current_user.data['gender'])
     return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, tobacco_use=tobacco_use)
 
 @app.route("/your-page")
