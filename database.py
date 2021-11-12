@@ -193,10 +193,32 @@ class Database:
             groups = cursor.fetchall()
             if groups == None:
                 return None
+            best_fitting_group = None
             for group in groups:
                 if is_age_in_range(age, group[1]):
-                    return group[0] / 1000
-            return None
+                    if best_fitting_group == None or range_width(group[1]) < range_width(best_fitting_group[1]):
+                        best_fitting_group = group
+            if best_fitting_group == None:
+                return None
+            return best_fitting_group[0] / 1000
+
+    def get_mortality_causes(self, country, sex, age):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT CAUSE, AGE_GROUP FROM adolescent_mortality_causes WHERE (COUNTRY = ? AND SEX = ? AND VALUE = 1)"
+            cursor.execute(query, (country, sex))
+            groups = cursor.fetchall()
+            if groups == None:
+                return None
+            best_fitting_group = None
+            for group in groups:
+                if is_age_in_range(age, group[1]):
+                    if best_fitting_group == None or range_width(group[1]) < range_width(best_fitting_group[1]):
+                        best_fitting_group = group
+            if best_fitting_group == None:
+                return None
+            return best_fitting_group[0]
+
 
 
 def is_age_in_range(age, group):
@@ -204,3 +226,7 @@ def is_age_in_range(age, group):
         return age >= int(group.replace("+", ""))
     limits = group.split("-")
     return age >= int(limits[0]) and age <= int(limits[1])
+
+def range_width(group):
+    limits = group.split("-")
+    return int(limits[1]) - int(limits[0]) + 1

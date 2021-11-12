@@ -45,7 +45,12 @@ def stats_page():
 
     adolescent_mortality = Database().get_adolescent_mortality(country=country, sex=gender, age=current_user.age)
 
-    return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality)
+    adolescent_mortality_cause = Database().get_mortality_causes(country=country, sex=gender, age=current_user.age)
+
+    return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, 
+    tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, 
+    life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, 
+    sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality, adolescent_mortality_cause=adolescent_mortality_cause)
 
 @app.route("/your-page")
 @login_required

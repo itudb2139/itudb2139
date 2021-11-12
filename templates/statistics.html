@@ -16,6 +16,14 @@
         {% endif %}
     {% endif %}
 
+    {% if is_applicable(current_user.age, "adolescent_mortality_causes") %}
+        {% if adolescent_mortality_cause == None %}
+            Data about adolescent mortality causes is not available in your country. <br>
+        {% else %}
+            If you die before 20, you will probably die from {{ adolescent_mortality_cause }}.<br>
+        {% endif %}
+    {% endif %}
+
     {% if life_expectancy_old == None %}
         Data about life expectancy after 60 is not available in your country.<br>
     {% else %}
@@ -83,7 +91,6 @@
     {% else %}
         There is {{ water }}% chance you are using at least basic water drinking services.<br>
     {% endif %}
-
     </p>
 
     <p>How accurate is the information above? <a href="/statistics_form">Let us know</a></p>
