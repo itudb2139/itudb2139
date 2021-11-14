@@ -20,3 +20,10 @@ Week 2:
 -More values added to statistics page
 -Adjustments made in gender values in SignUp form to match the column names of the database tables
 -Adjustments made to LogOut page to return to Home page
+
+Week 3:
+-Method to check whether the dataset has the user's country
+-Method to check whether a dataset is applicable to the user by age
+-Method to select a more appropriate age group of the dataset for the user
+-Methods to get the required values from the datasets added to the Database class
+-Data from the datasets added to the Statistics page
