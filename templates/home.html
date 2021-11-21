@@ -2,8 +2,10 @@
 {% block title %}Home{% endblock %}
 {% block content %}
     {% if current_user.is_authenticated %}
-    <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
-    {% endif %}
-    <p>Work in progress...</p>
+    <div class="content">
+        <h3 class="title">Welcome, {{ current_user.data['first_name'] }}</h3>
+        {% endif %}
+        <p>Work in progress...</p>
+    </div>
 
 {% endblock %}

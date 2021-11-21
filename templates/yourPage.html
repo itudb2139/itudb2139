@@ -2,18 +2,26 @@
 {% block title %}Your{% endblock %}
 {% block content %}
 
-    <h3>Welcome, {{ current_user.data['first_name'] }}</h3>
-    <p class = "profile"><b>Your profile:</b><br>
-    Full name: {{ current_user.data['first_name'] }} {{ current_user.data['last_name'] }}<br>
-    Gender: {{ current_user.data['gender'] }}<br>
-    Country: {{ current_user.data['country'] }}<br>
-    Age: {{ current_user.age }}<br>
-    Email: {{ current_user.data['email'] }}<br>
-    <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
-    <div class="button_group">
-        <form method = "get" action = "/logout">
-            <button type = "submit">Sign Out</button>
-        </form><br><br><br>
+    <div class="content">
+        <h3 class="title">Welcome, {{ current_user.data['first_name'] }}</h3>
+        <div class="box">
+            <p><b>Your profile:</b></p>
+            <ul>
+                <li><b>Full name:</b> {{ current_user.data['first_name'] }} {{ current_user.data['last_name'] }}</li>
+                <li><b>Gender:</b> {{ current_user.data['gender'] }}</li>
+                <li><b>Country:</b> {{ current_user.data['country'] }}</li>
+                <li><b>Age:</b> {{ current_user.age }}</li>
+                <li><b>Email:</b> {{ current_user.data['email'] }}</li>
+            </ul>
+
+            <div class="field">
+                <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
+            </div>
+
+                <form method = "get" action = "/logout">
+                    <button class="button is-danger" type = "submit">Sign Out</button>
+                </form><br><br><br>
+        </div>
     </div>
         
 

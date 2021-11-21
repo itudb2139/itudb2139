@@ -4,24 +4,36 @@
         <meta charset="utf-8"/>
         <title>{% block title %}{% endblock %} Page</title>
         <link rel="stylesheet" href="/static/main.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
       </head>
       <body>
-        <h1><div class = "button_group" style = "width: 100%">
-            <form method = "get" action = "/">
-                <button type = "submit">Home</button>
-            </form>
-            <form method = "get" action = "/statistics">
-                <button type = "submit">Statistics</button>
-            </form>
-            <form method = "get" action = "/your-page">
-                <button type = "submit">Your Page</button>
-            </form>
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <div class="navbar-item">
+              <a class="button is-primary" href="/">Home</a>
+            </div>
+            <div class="navbar-item">
+              <a class="button is-primary" href="/statistics">Statistics</a>
+            </div>
+            <div class="navbar-item">
+              <a class="button is-primary" href="/your-page">Your Page</a>
+            </div>
+          </div>
         </div>
-        </h1><br><br>
-        <h2>This website was created for a Database course and should not be used as medical reference. If you have any health concerns, please contact a professional.</h2>
-        {% block content %}{% endblock %}
-    
-        <footer>
+        <div class="block">
+          <div class="container">
+            <div class="notification is-info">
+              
+              <h2>This website was created for a Database course and should not be used as medical reference. If you have any health concerns, please contact a professional.</h2>
+            </div>
+          </div>
+        </div>
+        <div class="columns is-centered">
+          <div class="column is-half">
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+        <footer class="footer">
           <small>&copy; 2021, Leyla Mammadova</small>
         </footer>
       </body>

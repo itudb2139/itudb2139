@@ -1,20 +1,30 @@
 {% extends "layout.html" %}
 {% block title %}Your{% endblock %}
 {% block content %}
-    <h3>Fill the information below</h3>
-    <form action="{{ url_for('handle_login') }}" method="POST">
-        {% if error == True %}
-        <p class = error>Wrong email or password</p>
-        {% endif %}
+    <div class="content">
+        <h3>Fill the information below</h3>
+    </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
+    <div class="box">
+        <form action="{{ url_for('handle_login') }}" method="POST">
+            {% if error == True %}
+            <p class = "help is-danger">Wrong email or password</p>
+            {% endif %}
+            <div class="field">
+                <label for="email">Email:</label>
+                <input class="input is-normal" type="email" id="email" name="email"><br>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
+            <div class="field">
+                <label for="password">Password:</label>
+                <input class="input is-normal" type="password" id="password" name="password"><br>
+            </div>
 
-        <button type="submit">Log In</button>
-    </form>
+            <div class="field">
+                <button class="button is-light" type="submit">Log In</button>
+            </div>
+        </form>
+    </div>
     
 
 {% endblock %}

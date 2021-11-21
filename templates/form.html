@@ -1,78 +1,99 @@
 {% extends "layout.html" %}
 {% block title %}Your{% endblock %}
 {% block content %}
-    <h3>Fill the information below</h3>
-    <form action="{{ url_for(handler) }}" method="POST">
-        <label for="first_name">First name:</label>
-        <input type="text" id="first_name" placeholder="Leyla" name="first_name" value="{{ values['first_name'] }}"><br>
-        {% if 'first_name' in values.errors %}
-        <p class = "error">
-            {{ values.errors['first_name'] }}
-        </p>
-        {% endif %}
+    <div class="content">
+        <h3>Fill the information below</h3>
+    </div>
+    <div class="box">
 
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" placeholder="Mammadova" name="last_name" value="{{ values['last_name'] }}"><br>
-        {% if 'last_name' in values.errors %}
-        <p class = "error">
-            {{ values.errors['last_name'] }}
-        </p>
-        {% endif %}
+        <form action="{{ url_for(handler) }}" method="POST">
+            <div class="field">
+                <label for="first_name">First name:</label>
+                <input class="input is-normal" type="text" id="first_name" placeholder="Leyla" name="first_name" value="{{ values['first_name'] }}"><br>
+                {% if 'first_name' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['first_name'] }}
+                </p>
+                {% endif %}
+            </div>
+            
+            <div class="field">
+                <label for="last_name">Last Name:</label>
+                <input class="input is-normal" type="text" id="last_name" placeholder="Mammadova" name="last_name" value="{{ values['last_name'] }}"><br>
+                {% if 'last_name' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['last_name'] }}
+                </p>
+                {% endif %}
+            </div>
 
-        <label for="gender">Gender:</label><br>
-        <div id="gender" class="gender">
-            <label for="female">Female</label>
-            <input type="radio" id="female" name="gender" value="Female" {% if values['gender'] == "Female" %}checked{% endif %}><br>
-            <label for="male">Male</label> 
-            <input type="radio" id="male" name="gender" value="Male" {% if values['gender'] == "Male" %}checked{% endif %}><br>
-            {% if 'gender' in values.errors %}
-            <p class = "error">
-                {{ values.errors['gender'] }}
-            </p>
-            {% endif %}
-        </div>
+            <div class="field">
+                <label for="gender">Gender:</label><br>
+                <div id="gender" class="gender">
+                    <label for="female">Female</label>
+                    <input type="radio" id="female" name="gender" value="Female" {% if values['gender'] == "Female" %}checked{% endif %}><br>
+                    <label for="male">Male</label> 
+                    <input type="radio" id="male" name="gender" value="Male" {% if values['gender'] == "Male" %}checked{% endif %}><br>
+                </div>    
+                    {% if 'gender' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['gender'] }}
+                    </p>
+                    {% endif %}
+            </div>
 
-        <label for="country">Your country:</label>
-        <select id="country" name="country">
-            {% for country in countries %}
-            <option value="{{ country[0] }}" {% if values['country'] == country[0] %}selected{% endif %}>{{ country[0] }}</option>
-            {% endfor %}
-        </select><br>
+            <div class="field">
+                <label for="country">Your country:</label>
+                <select class="select is-normal" id="country" name="country">
+                    {% for country in countries %}
+                    <option value="{{ country[0] }}" {% if values['country'] == country[0] %}selected{% endif %}>{{ country[0] }}</option>
+                    {% endfor %}
+                </select><br>
+            </div>
+            
+            <div class="field">
+                <label for="birthday">Your birthday:</label>
+                <input type="date" id="birthday" name="birthday" value="{{ values['birthday'] }}"><br>
+                {% if 'birthday' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['birthday'] }}
+                </p>
+                {% endif %}
+            </div>
+            
+            <div class="field">
+                <label for="email">Email:</label>
+                <input class="input is-normal" type="email" id="email" name="email" value="{{ values['email'] }}"><br>
+                {% if 'email' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['email'] }}
+                </p>
+                {% endif %}
+            </div>
+            
+            <div class="field">
+                {% if handler == "handle_edit" %}
+                <p><i><b>Enter your password for confirmation</b></i></p>
+                {% endif %}
+            
+                <label for="password">Password:</label>
+                <input class="input is-normal" type="password" id="password" name="password" value="{{ values['password'] }}"><br>
+                {% if 'password' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['password'] }}
+                </p>
+                {% endif %}
+            
+                {% if error == True %}
+                    <p class="help is-danger">Wrong password</p>
+                {% endif %}
+            </div>
 
-        <label for="birthday">Your birthday:</label>
-        <input type="date" id="birthday" name="birthday" value="{{ values['birthday'] }}"><br>
-        {% if 'birthday' in values.errors %}
-        <p class = "error">
-            {{ values.errors['birthday'] }}
-        </p>
-        {% endif %}
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ values['email'] }}"><br>
-        {% if 'email' in values.errors %}
-        <p class = "error">
-            {{ values.errors['email'] }}
-        </p>
-        {% endif %}
-
-        {% if handler == "handle_edit" %}
-        <p><i>Enter your password for confirmation</i></p>
-        {% endif %}
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="{{ values['password'] }}"><br>
-        {% if 'password' in values.errors %}
-        <p class = "error">
-            {{ values.errors['password'] }}
-        </p>
-        {% endif %}
-
-        {% if error == True %}
-        <p class="error">Wrong password</p>
-        {% endif %}
-
-        <button type="submit">Submit</button>
-    </form>
-    
-
+            <div class="field">
+                <button class="button is-light" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+        
+        
 {% endblock %}

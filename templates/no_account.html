@@ -1,8 +1,14 @@
 {% extends "layout.html" %}
 {% block title %}Account{% endblock %}
 {% block content %}
-    <p>Looks like you don't have an account</p>
-    <a href="/log_in">Log in</a><br>
-    <a href="/form">Sign up</a>
+    <div class="content">
+        <div class="box">
+            <p>Looks like you don't have an account!</p>
+            <div class="buttons">
+                <a class="button is-success" href="/log_in">Log in</a><br>
+                <a class="button is-light" href="/form">Sign up</a>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
