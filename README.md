@@ -4,3 +4,4 @@ Work in Progress:
 -Statistics page personal data
 -Statistics page global data
 -Statistics form to evaluate predictions
+-Latest year for statistics provided
