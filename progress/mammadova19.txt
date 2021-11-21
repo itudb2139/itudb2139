@@ -27,3 +27,8 @@ Week 3:
 -Method to select a more appropriate age group of the dataset for the user
 -Methods to get the required values from the datasets added to the Database class
 -Data from the datasets added to the Statistics page
+
+Week 4:
+-CSS Framework added
+-CSS classes added to layout, home, statistics, yourPage, form, login and no_account pages
+-README file edited
