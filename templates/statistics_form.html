@@ -7,151 +7,175 @@
     <div class="box">
         <form action="{{ url_for('handle_statistics_form') }}" method="POST">
 
-            <label for="siblings">How many siblings do you have?</label>
-            <input type="number" id="siblings" name="siblings" value="{{ values['siblings'] }}">
-            {% if 'siblings' in values.errors %}
-                <p class = "help is-danger">
-                    {{ values.errors['siblings'] }}
-                </p>
-            {% endif %}
-
-            <p>What are your grandparents' age?/How old were they when they passed away?</p>
-            <div>
-                <label for="grandparent1">1.</label>
-                <input type="number" id="age1" name="grandparent1" value="{{ values['grandparent1'] }}">
-                <label for="grandparent2">2.</label>
-                <input type="number" id="age2" name="grandparent2" value="{{ values['grandparent2'] }}">
-                <label for="grandparent3">3.</label>
-                <input type="number" id="age3" name="grandparent3" value="{{ values['grandparent3'] }}">
-                <label for="grandparent4">4.</label>
-                <input type="number" id="age4" name="grandparent4" value="{{ values['grandparent4'] }}">
+            <div class="field">
+                <label for="siblings">How many siblings do you have?</label>
+                <input type="number" id="siblings" name="siblings" value="{{ values['siblings'] }}">
+                {% if 'siblings' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['siblings'] }}
+                    </p>
+                {% endif %}
             </div>
-            {% if 'grandparent1' in values.errors %}
-                <p class = "help is-danger">
-                    {{ values.errors['grandparent1'] }}
-                </p>
-            {% endif %}
 
-            <label for="education">Are you currently in eduation, employment or training?</label><br>
-            <div id="education">
-                <label for="yes">Yes</label>
-                <input type="radio" id="yes" name="education" value="Yes" {% if values['education'] == "Yes" %}checked{% endif %}>
-                <label for="no">No</label> 
-                <input type="radio" id="no" name="education" value="No" {% if values['education'] == "No" %}checked{% endif %}>
-            </div>   
-            {% if 'education' in values.errors %}
-                <p class = "help is-danger">
-                    {{ values.errors['education'] }}
-                </p>
-            {% endif %}  
-
-            <label for="tobacco">Do you use tobacco?</label><br>
-            <div id="tobacco">
-                <label for="yes">Yes</label>
-                <input type="radio" id="yes" name="tobacco" value="Yes" {% if values['tobacco'] == "Yes" %}checked{% endif %}>
-                <label for="no">No</label> 
-                <input type="radio" id="no" name="tobacco" value="No" {% if values['tobacco'] == "No" %}checked{% endif %}>
+            <div class="field">
+                <p>What are your grandparents' age?/How old were they when they passed away?</p>
+                <div>
+                    <label for="grandparent1">1.</label>
+                    <input type="number" id="age1" name="grandparent1" value="{{ values['grandparent1'] }}">
+                    <label for="grandparent2">2.</label>
+                    <input type="number" id="age2" name="grandparent2" value="{{ values['grandparent2'] }}">
+                    <label for="grandparent3">3.</label>
+                    <input type="number" id="age3" name="grandparent3" value="{{ values['grandparent3'] }}">
+                    <label for="grandparent4">4.</label>
+                    <input type="number" id="age4" name="grandparent4" value="{{ values['grandparent4'] }}">
+                </div>
+                {% if 'grandparent1' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['grandparent1'] }}
+                    </p>
+                {% endif %}
             </div>
-            {% if 'tobacco' in values.errors %}
-                <p class = "help is-danger">
-                    {{ values.errors['tobacco'] }}
-                </p>
-            {% endif %}  
+
+            <div class="field">
+                <label for="education">Are you currently in eduation, employment or training?</label><br>
+                <div id="education">
+                    <label for="yes">Yes</label>
+                    <input type="radio" id="yes" name="education" value="Yes" {% if values['education'] == "Yes" %}checked{% endif %}>
+                    <label for="no">No</label> 
+                    <input type="radio" id="no" name="education" value="No" {% if values['education'] == "No" %}checked{% endif %}>
+                </div>   
+                {% if 'education' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['education'] }}
+                    </p>
+                {% endif %} 
+            </div> 
+
+            <div class="field">
+                <label for="tobacco">Do you use tobacco?</label><br>
+                <div id="tobacco">
+                    <label for="yes">Yes</label>
+                    <input type="radio" id="yes" name="tobacco" value="Yes" {% if values['tobacco'] == "Yes" %}checked{% endif %}>
+                    <label for="no">No</label> 
+                    <input type="radio" id="no" name="tobacco" value="No" {% if values['tobacco'] == "No" %}checked{% endif %}>
+                </div>
+                {% if 'tobacco' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['tobacco'] }}
+                    </p>
+                {% endif %}  
+            </div>
             
-            <label for="drinking">Do you drink alcohol?</label><br>
-            <div id="drinking">
-                <label for="yes">Yes</label>
-                <input type="radio" id="yes" name="drinking" value="Yes" {% if values['drinking'] == "Yes" %}checked{% endif %}>
-                <label for="no">No</label> 
-                <input type="radio" id="no" name="drinking" value="No" {% if values['drinking'] == "No" %}checked{% endif %}>
+            <div class="field">
+                <label for="drinking">Do you drink alcohol?</label><br>
+                <div id="drinking">
+                    <label for="yes">Yes</label>
+                    <input type="radio" id="yes" name="drinking" value="Yes" {% if values['drinking'] == "Yes" %}checked{% endif %}>
+                    <label for="no">No</label> 
+                    <input type="radio" id="no" name="drinking" value="No" {% if values['drinking'] == "No" %}checked{% endif %}>
+                </div>
+                {% if 'drinking' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['drinking'] }}
+                    </p>
+                {% endif %}   
             </div>
-            {% if 'drinking' in values.errors %}
-                <p class = "help is-danger">
-                    {{ values.errors['drinking'] }}
-                </p>
-            {% endif %}   
 
-            <p>Do you have any familty members that currently have or have passed from any of the following diseases?(Select all that apply)<p>
-            <input type="checkbox" id="tuberculosis" name="tuberculosis" value="Tuberculosis">
-            <label for="tuberculosis">Tuberculosis</label>
+            <div class="field">
+                <p>Do you have any familty members that currently have or have passed from any of the following diseases?(Select all that apply)<p>
+                <input type="checkbox" id="tuberculosis" name="tuberculosis" value="Tuberculosis">
+                <label for="tuberculosis">Tuberculosis</label>
 
-            <input type="checkbox" id="resp_infection" name="resp_infection" value="Lower respiratory infections">
-            <label for="resp_infection">Lower Respiratory Infections</label>
+                <input type="checkbox" id="resp_infection" name="resp_infection" value="Lower respiratory infections">
+                <label for="resp_infection">Lower Respiratory Infections</label>
 
-            <input type="checkbox" id="isch_heart" name="isch_heart" value="Ischaemic heart disease">
-            <label for="isch_heart">Ischaemic Heart Disease</label>
+                <input type="checkbox" id="isch_heart" name="isch_heart" value="Ischaemic heart disease">
+                <label for="isch_heart">Ischaemic Heart Disease</label>
 
-            <input type="checkbox" id="leukaemia" name="leukaemia" value="Leukaemia">
-            <label for="leukaemia">Leukaemia</label>
+                <input type="checkbox" id="leukaemia" name="leukaemia" value="Leukaemia">
+                <label for="leukaemia">Leukaemia</label>
+                
+                <br>
 
-            <input type="checkbox" id="epilepsy" name="epilepsy" value="Epilepsy">
-            <label for="epilepsy">Epilepsy</label>
+                <input type="checkbox" id="epilepsy" name="epilepsy" value="Epilepsy">
+                <label for="epilepsy">Epilepsy</label>
 
-            <input type="checkbox" id="brain_cancer" name="brain_cancer" value="Brain and nervous system cancers">
-            <label for="brain_cancer">Brain and nervous systems cancers</label>
+                <input type="checkbox" id="brain_cancer" name="brain_cancer" value="Brain and nervous system cancers">
+                <label for="brain_cancer">Brain and nervous systems cancers</label>
 
-            <input type="checkbox" id="diarrhoeal" name="diarrhoeal" value="Diarrhoeal diseases">
-            <label for="diarrhoeal">Diarrhoeal Diseases</label>
+                <input type="checkbox" id="diarrhoeal" name="diarrhoeal" value="Diarrhoeal diseases">
+                <label for="diarrhoeal">Diarrhoeal Diseases</label>
 
-            <input type="checkbox" id="hiv" name="hiv" value="HIV/AIDS">
-            <label for="hiv">HIV/AIDS</label>
+                <input type="checkbox" id="hiv" name="hiv" value="HIV/AIDS">
+                <label for="hiv">HIV/AIDS</label>
 
-            <input type="checkbox" id="malaria" name="malaria" value="Malaria">
-            <label for="malaria">Malaria</label>
+                <br>
 
-            <input type="checkbox" id="meningitis" name="meningitis" value="Meningitis">
-            <label for="meningitis">Meningitis</label>
+                <input type="checkbox" id="malaria" name="malaria" value="Malaria">
+                <label for="malaria">Malaria</label>
 
-            <input type="checkbox" id="hyper_heart" name="hyper_heart" value="Hypertensive heart disease">
-            <label for="hyper_heart">Hypertensive Heart Disease</label>
+                <input type="checkbox" id="meningitis" name="meningitis" value="Meningitis">
+                <label for="meningitis">Meningitis</label>
 
-            <input type="checkbox" id="sickle_cell" name="sickle_cell" value="Sickle cell disorders and trait">
-            <label for="sickle_cell">Sickle Cell Disorders and Trait</label>
+                <input type="checkbox" id="hyper_heart" name="hyper_heart" value="Hypertensive heart disease">
+                <label for="hyper_heart">Hypertensive Heart Disease</label>
 
-            <input type="checkbox" id="kidney_cancer" name="kidney_cancer" value="Kidney cancer">
-            <label for="kidney_cancer">Kidney Cancer</label>
+                <input type="checkbox" id="sickle_cell" name="sickle_cell" value="Sickle cell disorders and trait">
+                <label for="sickle_cell">Sickle Cell Disorders and Trait</label>
 
-            <input type="checkbox" id="pancreatitis" name="pancreatitis" value="Pancreatitis">
-            <label for="pancreatitis">Pancreatitis</label>
+                <br>
 
-            <input type="checkbox" id="protein" name="protein" value="Pancreatitis">
-            <label for="protein">Protein-energy Malnutrition</label>
+                <input type="checkbox" id="kidney_cancer" name="kidney_cancer" value="Kidney cancer">
+                <label for="kidney_cancer">Kidney Cancer</label>
 
-            <input type="checkbox" id="cardio" name="cardio" value="Cardiomyopathy, myocarditis, endocarditis">
-            <label for="cardio">Cardiomyopathy, myocarditis, endocarditis</label>
+                <input type="checkbox" id="pancreatitis" name="pancreatitis" value="Pancreatitis">
+                <label for="pancreatitis">Pancreatitis</label>
 
-            <input type="checkbox" id="ovary_cancer" name="ovary_cancer" value="Ovary cancer">
-            <label for="ovary_cancer">Ovary Cancer</label>
+                <input type="checkbox" id="protein" name="protein" value="Pancreatitis">
+                <label for="protein">Protein-energy Malnutrition</label>
 
-            <input type="checkbox" id="asthma" name="asthma" value="Asthma">
-            <label for="asthma">Asthma</label>
+                <input type="checkbox" id="cardio" name="cardio" value="Cardiomyopathy, myocarditis, endocarditis">
+                <label for="cardio">Cardiomyopathy, myocarditis, endocarditis</label>
 
-            <input type="checkbox" id="hepa" name="hepa" value="Acute hepatitis A">
-            <label for="hepa">Acute Hepatitis A</label>
+                <br>
 
-            <input type="checkbox" id="hepb" name="hepb" value="Acute hepatitis B">
-            <label for="hepb">Acute Hepatitis B</label>
+                <input type="checkbox" id="ovary_cancer" name="ovary_cancer" value="Ovary cancer">
+                <label for="ovary_cancer">Ovary Cancer</label>
 
-            <input type="checkbox" id="encephalitis" name="encephalitis" value="Encephalitis">
-            <label for="encephalitis">Encephalitis</label>
+                <input type="checkbox" id="asthma" name="asthma" value="Asthma">
+                <label for="asthma">Asthma</label>
 
-            <input type="checkbox" id="thalassaemias" name="thalassaemias" value="Thalassaemias">
-            <label for="thalassaemias">Thalassaemias</label>
+                <input type="checkbox" id="hepa" name="hepa" value="Acute hepatitis A">
+                <label for="hepa">Acute Hepatitis A</label>
 
-            <input type="checkbox" id="rabies" name="rabies" value="Rabies">
-            <label for="rabies">Rabies</label>
+                <input type="checkbox" id="hepb" name="hepb" value="Acute hepatitis B">
+                <label for="hepb">Acute Hepatitis B</label>
 
-            <input type="checkbox" id="skin" name="skin" value="Skin diseases">
-            <label for="skin">Skin Diseases</label>
+                <br>
 
-            <input type="checkbox" id="schizophrenia" name="schizophrenia" value="Schizophrenia">
-            <label for="schizophrenia">Schizophrenia</label>
+                <input type="checkbox" id="encephalitis" name="encephalitis" value="Encephalitis">
+                <label for="encephalitis">Encephalitis</label>
 
-            <input type="checkbox" id="alzheimer" name="alzheimer" value="Alzheimer disease and other dementias">
-            <label for="alzheimer">Alzheimer Disease And Other Dementias</label>
+                <input type="checkbox" id="thalassaemias" name="thalassaemias" value="Thalassaemias">
+                <label for="thalassaemias">Thalassaemias</label>
 
-            <input type="checkbox" id="anemia" name="anemia" value="Iron-deficiency anaemia">
-            <label for="anemia">Iron-deficiency anaemia</label>
+                <input type="checkbox" id="rabies" name="rabies" value="Rabies">
+                <label for="rabies">Rabies</label>
+
+                <input type="checkbox" id="skin" name="skin" value="Skin diseases">
+                <label for="skin">Skin Diseases</label>
+
+                <br>
+
+                <input type="checkbox" id="schizophrenia" name="schizophrenia" value="Schizophrenia">
+                <label for="schizophrenia">Schizophrenia</label>
+
+                <input type="checkbox" id="alzheimer" name="alzheimer" value="Alzheimer disease and other dementias">
+                <label for="alzheimer">Alzheimer Disease And Other Dementias</label>
+
+                <input type="checkbox" id="anemia" name="anemia" value="Iron-deficiency anaemia">
+                <label for="anemia">Iron-deficiency anaemia</label>
+            </div>
 
             <div class="field">
                 <button class="button is-light" type="submit">Submit</button>
