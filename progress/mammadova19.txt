@@ -32,3 +32,11 @@ Week 4:
 -CSS Framework added
 -CSS classes added to layout, home, statistics, yourPage, form, login and no_account pages
 -README file edited
+
+Week 5:
+-New table for the form submitted by the user created
+-Method to add forms to the table added 
+-Statistics form added
+-Function added to validate submitted data and print errors
+-Function added to handle the submitted data and add it to the table
+-CSS is added to the statistics form page
