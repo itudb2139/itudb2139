@@ -27,13 +27,16 @@ class Database:
             cursor.execute(query, (id,))
             connection.commit()
 
-    def get_countries(self):
+    # Form Table
+    def add_form(self, siblings, grandparent_age, education, tobacco, alcohol, user_id):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "SELECT DISTINCT COUNTRY FROM total_fertility"
-            cursor.execute(query)
-        return cursor.fetchall()
+            query = "INSERT INTO form (SIBLINGS, GR_AGE, EDUCATION, TOBACCO, ALCOHOL, USER_ID) VALUES (?, ?, ?, ?, ?, ?)"
+            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, user_id))
+            connection.commit()
+        return cursor.lastrowid
 
+    # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -48,13 +51,7 @@ class Database:
             cursor.execute(query, (value,))
         return cursor.fetchone()
 
-    def get_fertility(self, country):
-        with sqlite3.connect(self.dbfile) as connection:
-            cursor = connection.cursor()
-            query = "SELECT VALUE FROM total_fertility WHERE (COUNTRY = ? AND YEAR = 2020)"
-            cursor.execute(query, (country, ))
-        return cursor.fetchone()
-
+    # Form utility
     def is_applicable(self, age, table):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -65,6 +62,21 @@ class Database:
             if(is_age_in_range(age, group[0])):
                 return True
         return False
+
+    def get_countries(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT DISTINCT COUNTRY FROM total_fertility"
+            cursor.execute(query)
+        return cursor.fetchall()
+
+    # Dataset access
+    def get_fertility(self, country):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT VALUE FROM total_fertility WHERE (COUNTRY = ? AND YEAR = 2020)"
+            cursor.execute(query, (country, ))
+        return cursor.fetchone()
         
     def get_tobacco_use(self, country, sex):
         with sqlite3.connect(self.dbfile) as connection:
