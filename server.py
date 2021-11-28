@@ -81,7 +81,8 @@ def no_account_page():
 
 @app.route("/statistics_form")
 def statistics_form():
-    return render_template("statistics_form.html")
+    values = {}
+    return render_template("statistics_form.html", values=values)
 
 
 def validate_registration(form):
@@ -186,7 +187,77 @@ def handle_edit():
         current_user.update_data()
         return render_template("yourPage.html", current_user=current_user)
     else:
-        return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit", error = True)
+        return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit")
+
+def validate_statistics_form(form):
+    form.data = {}
+    form.errors = {}
+
+    form_siblings = form['siblings']
+    if len(form_siblings) == 0:
+        form.errors['siblings'] = "Number of siblings cannot be blank"
+    else:
+        form.data['siblings'] = form_siblings
+
+    form_grandparent1 = form['grandparent1']
+    if len(form_grandparent1) == 0:
+        form.errors['grandparent1'] = "At least one grandparent's age should be entered."
+    else:
+        form.data['grandparent1'] = form_grandparent1
+
+    form_grandparent2 = form['grandparent2']
+    if len(form_grandparent2) != 0:
+        form.data['grandparent2'] = form_grandparent2
+
+    form_grandparent3 = form['grandparent3']
+    if len(form_grandparent3) != 0:
+        form.data['grandparent3'] = form_grandparent3
+    
+    form_grandparent4 = form['grandparent4']
+    if len(form_grandparent4) != 0:
+        form.data['grandparent4'] = form_grandparent4
+        
+    form_education = form.get('education', '')
+    if len(form_education) == 0:
+        form.errors['education'] = "This field cannot be blank"
+    else:
+        form.data['education'] = form_education
+
+    form_tobacco = form.get('tobacco', '')
+    if len(form_tobacco) == 0:
+        form.errors['tobacco'] = "This field cannot be blank"
+    else:
+        form.data['tobacco'] = form_tobacco
+
+    form_drinking = form.get('drinking', '')
+    if len(form_drinking) == 0:
+        form.errors['drinking'] = "This field cannot be blank"
+    else:
+        form.data['drinking'] = form_drinking
+
+    return len(form.errors) == 0
+
+@app.route("/handle_statistics_form", methods=['POST'])
+def handle_statistics_form():
+    valid = validate_statistics_form(request.form)
+    if not valid:
+        return render_template("statistics_form.html", values = request.form)
+
+    sibling_number = request.form.data['siblings']
+
+    grandparent1 = int(request.form.data['grandparent1'])
+    grandparent2 = int(request.form.data['grandparent2'])
+    grandparent3 = int(request.form.data['grandparent3'])
+    grandparent4 = int(request.form.data['grandparent4'])
+    gp_age = (grandparent1 + grandparent2 + grandparent3 + grandparent4) / 4
+
+    is_education = request.form.data['education']
+    is_tobacco = request.form.data['tobacco']
+    is_alcohol = request.form.data['drinking']
+
+    Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
+
+    return render_template("statistics_form.html", values = request.form)
 
 
 def create_hash(password):
