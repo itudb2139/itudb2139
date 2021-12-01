@@ -82,7 +82,11 @@ def no_account_page():
 @app.route("/statistics_form")
 def statistics_form():
     values = {}
-    return render_template("statistics_form.html", values=values)
+    causes = {}
+    adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
+    if(adolescent_mortality_cause != None):
+        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+    return render_template("statistics_form.html", values=values, causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
 
 
 def validate_registration(form):
@@ -241,7 +245,11 @@ def validate_statistics_form(form):
 def handle_statistics_form():
     valid = validate_statistics_form(request.form)
     if not valid:
-        return render_template("statistics_form.html", values = request.form)
+        adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
+        causes = {}
+        if(adolescent_mortality_cause != None):
+            causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+        return render_template("statistics_form.html", causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
 
     sibling_number = request.form.data['siblings']
 
@@ -257,7 +265,12 @@ def handle_statistics_form():
 
     Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
 
-    return render_template("statistics_form.html", values = request.form)
+    adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
+    causes = {}
+    if(adolescent_mortality_cause != None):
+        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+
+    return render_template("statistics_form.html", values = request.form, causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
 
 
 def create_hash(password):

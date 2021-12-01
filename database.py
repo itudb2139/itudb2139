@@ -70,6 +70,13 @@ class Database:
             cursor.execute(query)
         return cursor.fetchall()
 
+    def get_mortality_causes_form(self, country, sex):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT DISTINCT CAUSE FROM adolescent_mortality_causes WHERE (COUNTRY = ? AND SEX = ?) ORDER BY CAUSE ASC"
+            cursor.execute(query, (country, sex))
+        return cursor.fetchall()
+
     # Dataset access
     def get_fertility(self, country):
         with sqlite3.connect(self.dbfile) as connection:

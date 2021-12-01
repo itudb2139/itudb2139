@@ -80,102 +80,15 @@
                     </p>
                 {% endif %}   
             </div>
-
-            <div class="field">
-                <p>Do you have any familty members that currently have or have passed from any of the following diseases?(Select all that apply)<p>
-                <input type="checkbox" id="tuberculosis" name="tuberculosis" value="Tuberculosis">
-                <label for="tuberculosis">Tuberculosis</label>
-
-                <input type="checkbox" id="resp_infection" name="resp_infection" value="Lower respiratory infections">
-                <label for="resp_infection">Lower Respiratory Infections</label>
-
-                <input type="checkbox" id="isch_heart" name="isch_heart" value="Ischaemic heart disease">
-                <label for="isch_heart">Ischaemic Heart Disease</label>
-
-                <input type="checkbox" id="leukaemia" name="leukaemia" value="Leukaemia">
-                <label for="leukaemia">Leukaemia</label>
-                
-                <br>
-
-                <input type="checkbox" id="epilepsy" name="epilepsy" value="Epilepsy">
-                <label for="epilepsy">Epilepsy</label>
-
-                <input type="checkbox" id="brain_cancer" name="brain_cancer" value="Brain and nervous system cancers">
-                <label for="brain_cancer">Brain and nervous systems cancers</label>
-
-                <input type="checkbox" id="diarrhoeal" name="diarrhoeal" value="Diarrhoeal diseases">
-                <label for="diarrhoeal">Diarrhoeal Diseases</label>
-
-                <input type="checkbox" id="hiv" name="hiv" value="HIV/AIDS">
-                <label for="hiv">HIV/AIDS</label>
-
-                <br>
-
-                <input type="checkbox" id="malaria" name="malaria" value="Malaria">
-                <label for="malaria">Malaria</label>
-
-                <input type="checkbox" id="meningitis" name="meningitis" value="Meningitis">
-                <label for="meningitis">Meningitis</label>
-
-                <input type="checkbox" id="hyper_heart" name="hyper_heart" value="Hypertensive heart disease">
-                <label for="hyper_heart">Hypertensive Heart Disease</label>
-
-                <input type="checkbox" id="sickle_cell" name="sickle_cell" value="Sickle cell disorders and trait">
-                <label for="sickle_cell">Sickle Cell Disorders and Trait</label>
-
-                <br>
-
-                <input type="checkbox" id="kidney_cancer" name="kidney_cancer" value="Kidney cancer">
-                <label for="kidney_cancer">Kidney Cancer</label>
-
-                <input type="checkbox" id="pancreatitis" name="pancreatitis" value="Pancreatitis">
-                <label for="pancreatitis">Pancreatitis</label>
-
-                <input type="checkbox" id="protein" name="protein" value="Pancreatitis">
-                <label for="protein">Protein-energy Malnutrition</label>
-
-                <input type="checkbox" id="cardio" name="cardio" value="Cardiomyopathy, myocarditis, endocarditis">
-                <label for="cardio">Cardiomyopathy, myocarditis, endocarditis</label>
-
-                <br>
-
-                <input type="checkbox" id="ovary_cancer" name="ovary_cancer" value="Ovary cancer">
-                <label for="ovary_cancer">Ovary Cancer</label>
-
-                <input type="checkbox" id="asthma" name="asthma" value="Asthma">
-                <label for="asthma">Asthma</label>
-
-                <input type="checkbox" id="hepa" name="hepa" value="Acute hepatitis A">
-                <label for="hepa">Acute Hepatitis A</label>
-
-                <input type="checkbox" id="hepb" name="hepb" value="Acute hepatitis B">
-                <label for="hepb">Acute Hepatitis B</label>
-
-                <br>
-
-                <input type="checkbox" id="encephalitis" name="encephalitis" value="Encephalitis">
-                <label for="encephalitis">Encephalitis</label>
-
-                <input type="checkbox" id="thalassaemias" name="thalassaemias" value="Thalassaemias">
-                <label for="thalassaemias">Thalassaemias</label>
-
-                <input type="checkbox" id="rabies" name="rabies" value="Rabies">
-                <label for="rabies">Rabies</label>
-
-                <input type="checkbox" id="skin" name="skin" value="Skin diseases">
-                <label for="skin">Skin Diseases</label>
-
-                <br>
-
-                <input type="checkbox" id="schizophrenia" name="schizophrenia" value="Schizophrenia">
-                <label for="schizophrenia">Schizophrenia</label>
-
-                <input type="checkbox" id="alzheimer" name="alzheimer" value="Alzheimer disease and other dementias">
-                <label for="alzheimer">Alzheimer Disease And Other Dementias</label>
-
-                <input type="checkbox" id="anemia" name="anemia" value="Iron-deficiency anaemia">
-                <label for="anemia">Iron-deficiency anaemia</label>
-            </div>
+            {% if adolescent_mortality_cause != None %}
+                <div class="field">
+                    <p>Do you have any familty members that have passed from any of the following causes?(Select all that apply)<p>
+                    {% for cause in causes %}
+                        <label for="cause">{{ cause[0] }}</label>
+                        <input type="checkbox" id="cause" name="cause" value="{{ cause[0] }}"><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
             <div class="field">
                 <button class="button is-light" type="submit">Submit</button>
