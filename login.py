@@ -43,14 +43,17 @@ class user_login:
                 "email": data[6]
             }
 
+    #Function to calculate the age of the user given the birthday
     @property
     def age(self):
         today = datetime.date.today()
         birthday_obj = datetime.datetime.strptime(self.data['birthday'], "%Y-%m-%d").date()
         this_year_bday = datetime.date(today.year, birthday_obj.month, birthday_obj.day)
+        #If the user had a birthday this year, the age is current year - the birth year
         if this_year_bday < today:
             years = today.year - birthday_obj.year
         else:
+            #Otherwise, the age is 1 year less
             years = today.year - birthday_obj.year - 1
         return years
 

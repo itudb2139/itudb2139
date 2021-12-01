@@ -111,10 +111,13 @@ class Database:
             groups = cursor.fetchall()
             group_total = 0
             group_count = 0
+            #If the user fits in one of the age groups, the value for that age group is returned
             for group in groups:
                 if is_age_in_range(age, group[1]):
+                    #Divide by 1000, since the data is given per 100 000 population
                     return group[0] / 1000
                 else:
+                    #If the user does not fit in any of the age groups, the total and then the average value is calculated
                     group_total += group[0]
                 group_count = group_count + 1
             return group_total / (group_count * 1000)
@@ -127,6 +130,7 @@ class Database:
             groups = cursor.fetchall()
             group_total = 0
             group_count = 0
+            #Works in a similar way to the above function
             for group in groups:
                 if is_age_in_range(age, group[1]):
                     return group[0] / 1000
@@ -141,6 +145,7 @@ class Database:
             query = "SELECT VALUE FROM young_education WHERE (COUNTRY = ? AND SEX = ?) ORDER BY YEAR DESC"
             cursor.execute(query, (country, sex))
         result = cursor.fetchone()
+        #If nothing was found, the user's country is not in the dataset, return None
         if result == None:
             return None
         return result[0]
@@ -223,6 +228,7 @@ class Database:
             best_fitting_group = None
             for group in groups:
                 if is_age_in_range(age, group[1]):
+                    #Method to find the best fitting group for the current user
                     if best_fitting_group == None or range_width(group[1]) < range_width(best_fitting_group[1]):
                         best_fitting_group = group
             if best_fitting_group == None:
@@ -239,6 +245,7 @@ class Database:
                 return None
             best_fitting_group = None
             for group in groups:
+                #The method is similar to the function above
                 if is_age_in_range(age, group[1]):
                     if best_fitting_group == None or range_width(group[1]) < range_width(best_fitting_group[1]):
                         best_fitting_group = group
@@ -247,13 +254,16 @@ class Database:
             return best_fitting_group[0]
 
 
-
+#Function to check if the user's age is in the given age group
 def is_age_in_range(age, group):
     if "+" in group:
+        #If the age group is given as "age+", check if the user's age is bigger
         return age >= int(group.replace("+", ""))
+    #Otherwise, check if the age is within the limits
     limits = group.split("-")
     return age >= int(limits[0]) and age <= int(limits[1])
 
+#Function to calculate the range of the age group
 def range_width(group):
     limits = group.split("-")
     return int(limits[1]) - int(limits[0]) + 1

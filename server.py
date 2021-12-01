@@ -63,6 +63,7 @@ def your_page():
 @app.route("/form")
 def form_page():
     values = {}
+    #get_countries function is called in order to get the country options for the registration form
     return render_template("form.html", countries=Database().get_countries(), values=values, handler="handle_data")
 
 @app.route("/log_in")
@@ -95,13 +96,16 @@ def statistics_form():
 
 
 def validate_registration(form):
+    #Creating 2 dictionaries for errors and data
     form.data = {}
     form.errors = {}
 
+    #If any of the required field are blank, an error message is added to the errors dictionary
     form_name = form['first_name']
     if len(form_name) == 0:
         form.errors['first_name'] = "First name cannot be blank"
     else:
+        #Otherwise, the entered data is added to the data dictionary 
         form.data['first_name'] = form_name
 
     form_last_name = form['last_name']
@@ -136,6 +140,7 @@ def validate_registration(form):
     else:
         form.data['password'] = form_password
     
+    #The function returns true if the errors dictionary is empty (i.e. when all the required fields are filled)
     return len(form.errors) == 0
 
     
@@ -145,9 +150,12 @@ def handle_data():
         values = {'first_name':"", 'last_name':"", 'gender':"", 'country':"", 'birthday':"", 'email':"", 'password':""}
         return render_template("form.html", countries=Database().get_countries(), values = values, handler="handle_data")
     else:
+        #If the user left some required fields blank, the form will not be validated
         valid = validate_registration(request.form)
         if not valid:
+            #Error messages will be printed and the previously entered values will be autofilled (from values dictionary)
             return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_data")
+        #If the form is validated, the entered values are assigned to the variables
         user_first_name = request.form.data['first_name']
         user_last_name = request.form.data['last_name']
         user_gender = request.form.get('gender', '')
@@ -155,8 +163,12 @@ def handle_data():
         user_birthday = request.form.data['birthday']
         user_email = request.form.data['email']
         user_password = request.form.data['password']
+        #The password that the user entered is turned into hash
         hash1 = create_hash(user_password)
+        #The new user is created and added to the users table in the database
+        #The function returns the id of the last added row
         new_id = Database().add_user(user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email, hash1)
+        #Using the user id of the newly created user, login function is called
         login_user(login.load_user(new_id))
         return render_template("yourPage.html", current_user=current_user)
 
@@ -167,18 +179,26 @@ def handle_login():
     user_password = request.form['password']
     hash_pw = Database().get_password(user_email)
     if hash_pw == None:
+        #If the function get_password did not find a user the with that email, an error message is shown
         return render_template("login.html", error = True)
 
+    #Otherwise, if the entered password matches the password of the registered user
     if(check_password(user_password, hash_pw[0])):
+        #Get user data of the user with the entered email
+        #Parameter is the condition parameter to find the user, in this case, find by email
         user_data = Database().get_user(user_email, parameter="EMAIL")
+        #Getting user id from the found user
         user_id = user_data[0]
+        #Calling the login function with the found user id
         login_user(login.load_user(user_id))
         return render_template("yourPage.html", current_user=current_user)
     else:
+        #If the passwords don't match, an error message is printed
         return render_template("login.html", error = True)
 
 @app.route("/handle_edit", methods=['POST'])
 def handle_edit():
+    #The edit form works in a similar way to the registration form. Thus, the same validation function is used.
     valid = validate_registration(request.form)
     if not valid:
         return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit")
@@ -190,15 +210,23 @@ def handle_edit():
     user_email = request.form.data['email']
 
     user_password = request.form.data['password']
+    #Getting the password (hash) of the current user (using the email)
     hash_pw = Database().get_password(current_user.data['email'])
     if (check_password(user_password, hash_pw[0])):
+        #If the passwords match, update user function is called with the new parameters
         Database().update_user(current_user.data['id'], user_first_name, user_last_name, user_gender, user_country, user_birthday, user_email)
+        #Calling update data function on the current user
         current_user.update_data()
+        #Redirecting to yourPage
         return render_template("yourPage.html", current_user=current_user)
     else:
+        #If the passwords don't match, an error message will be printed and the values will be autofilled
         return render_template("form.html", countries=Database().get_countries(), values = request.form, handler="handle_edit")
 
 def validate_statistics_form(form):
+    #This function works in the same way as "validate_registration" function
+    #Required fields need to be filled or an error message will be added to the errors dictionary
+    #Otherwise, the entered data will be added to the data dictionary
     form.data = {}
     form.errors = {}
 
@@ -244,50 +272,63 @@ def validate_statistics_form(form):
     else:
         form.data['drinking'] = form_drinking
 
+    #The function returns true if there were no errors (all the required fields were filled)
     return len(form.errors) == 0
 
 @app.route("/handle_statistics_form", methods=['POST'])
 def handle_statistics_form():
     valid = validate_statistics_form(request.form)
     if not valid:
+        #If some of the required fields were not filled, error messages are printed and the form is loaded again
+        #get_mortality_causes function is called in order to ensure the data is available for the current user's country 
         adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
         causes = {}
         if(adolescent_mortality_cause != None):
+            #If the data is available, the function is called to get the options for the checkboxes 
             causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
         return render_template("statistics_form.html", causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
 
     sibling_number = request.form.data['siblings']
 
     grandparent1 = int(request.form.data['grandparent1'])
+    #The count variable is used to keep track of how many grandparents' ages were entered
     count = 1
+    #The first grandparent has to be entered, the remaining ones are initialized with 0
     grandparent2 = grandparent3 = grandparent4 = 0
     if 'grandparent2' in request.form.data:
+        #If the second grandparent is entered, the value is cast into an integer and the count variable is incremented
         grandparent2 = int(request.form.data['grandparent2'])
         count += 1
     if 'grandparent3' in request.form.data:
+        #The logic above applies to the remaining grandparents
         grandparent3 = int(request.form.data['grandparent3'])
         count += 1
     if 'grandparent4' in request.form.data:
         grandparent4 = int(request.form.data['grandparent4'])
         count += 1
+    #Ater all the values are received, the average between the ages is found, using the count variable
     gp_age = (grandparent1 + grandparent2 + grandparent3 + grandparent4) / count
 
     is_education = request.form.data['education']
     is_tobacco = request.form.data['tobacco']
     is_alcohol = request.form.data['drinking']
 
+    #In order to access the entered checkbox data, a dictionary is created
     form_causes = dict(request.form.lists()).get('cause', [])
+    #If any were selected, the causes will be added to the mortality_causes table one by one with the current user id
     for cause in form_causes:
         Database().add_causes(current_user.data['id'], cause)
-    
+    #The rest of the entered information will be added to the form table with the current user id
     Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
-
+    #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
 
+#Function to create hash for the password
 def create_hash(password):
     pw_hash = bcrypt.hashpw(bytes(password, encoding="utf-8"), bcrypt.gensalt())
     return pw_hash
 
+#Function to compare the password with the hash
 def check_password(password, pw_hash):
     return bcrypt.checkpw(bytes(password, encoding="utf-8"), pw_hash)
 
