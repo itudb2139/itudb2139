@@ -36,6 +36,14 @@ class Database:
             connection.commit()
         return cursor.lastrowid
 
+    def add_causes(self, user_id, cause):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "INSERT INTO mortality_causes (USER_ID, CAUSE) VALUES (?, ?)"
+            cursor.execute(query, (user_id, cause))
+            connection.commit()
+        return cursor.lastrowid
+
     # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:

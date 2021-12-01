@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
+
+from flask.helpers import url_for
 import bcrypt
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from database import Database
@@ -19,6 +21,7 @@ def stats_page():
     country = current_user.data['country']
     gender = current_user.data['gender']
 
+    #Getting data based on the user's country, age and gender from the respective tables
     fertility, = Database().get_fertility(country=country)
 
     tobacco_use = Database().get_tobacco_use(country=country, sex=gender)
@@ -83,7 +86,9 @@ def no_account_page():
 def statistics_form():
     values = {}
     causes = {}
+    #If the query below returns None, then this data is not available for this user's country
     adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
+    #The form is going to have this field only if the data for mortality causes is available for this user
     if(adolescent_mortality_cause != None):
         causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
     return render_template("statistics_form.html", values=values, causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
@@ -254,24 +259,30 @@ def handle_statistics_form():
     sibling_number = request.form.data['siblings']
 
     grandparent1 = int(request.form.data['grandparent1'])
-    grandparent2 = int(request.form.data['grandparent2'])
-    grandparent3 = int(request.form.data['grandparent3'])
-    grandparent4 = int(request.form.data['grandparent4'])
-    gp_age = (grandparent1 + grandparent2 + grandparent3 + grandparent4) / 4
+    count = 1
+    grandparent2 = grandparent3 = grandparent4 = 0
+    if 'grandparent2' in request.form.data:
+        grandparent2 = int(request.form.data['grandparent2'])
+        count += 1
+    if 'grandparent3' in request.form.data:
+        grandparent3 = int(request.form.data['grandparent3'])
+        count += 1
+    if 'grandparent4' in request.form.data:
+        grandparent4 = int(request.form.data['grandparent4'])
+        count += 1
+    gp_age = (grandparent1 + grandparent2 + grandparent3 + grandparent4) / count
 
     is_education = request.form.data['education']
     is_tobacco = request.form.data['tobacco']
     is_alcohol = request.form.data['drinking']
 
+    form_causes = dict(request.form.lists()).get('cause', [])
+    for cause in form_causes:
+        Database().add_causes(current_user.data['id'], cause)
+    
     Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
 
-    adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
-    causes = {}
-    if(adolescent_mortality_cause != None):
-        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
-
-    return render_template("statistics_form.html", values = request.form, causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
-
+    return redirect(url_for('stats_page'))
 
 def create_hash(password):
     pw_hash = bcrypt.hashpw(bytes(password, encoding="utf-8"), bcrypt.gensalt())
