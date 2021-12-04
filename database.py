@@ -253,6 +253,29 @@ class Database:
                 return None
             return best_fitting_group[0]
 
+    #Form dataset access
+    def get_user_form(self, id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT * FROM form WHERE (USER_ID = ?)"
+            cursor.execute(query, (id, ))
+        return cursor.fetchone()
+
+    def get_user_causes(self, id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT * FROM mortality_causes WHERE (USER_ID = ?)"
+            cursor.execute(query, (id, ))
+        rows = cursor.fetchall()
+        #If no causes were selected, the function returns None
+        if rows == None:
+            return None
+        #Create an array of all entered causes
+        causes = [row[1] for row in rows]
+
+        return causes
+
+
 
 #Function to check if the user's age is in the given age group
 def is_age_in_range(age, group):

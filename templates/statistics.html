@@ -5,7 +5,7 @@
     <div class="content">
         <h3 class="title">Welcome, {{ current_user.data['first_name'] }}</h3>
         <div class="box">
-            <p><b>Your Statistics:</b></p>
+            <p><b>Your Predicted Statistics:</b></p>
             <ul>
                 <li>Approximate number of siblings: <b>{{ fertility }}</b></li>
 
@@ -81,7 +81,7 @@
 
                 {% if current_user.age >= 15 and current_user.age <= 19 %}
                     <li>
-                    {% if physical_activity == None %}
+                    {% if drinking == None %}
                         Data about adolescent drinking is not available in your country.
                     {% else %}
                         <b>{{ drinking }}%</b> of the people you know are drinking.
@@ -109,9 +109,48 @@
             </ul>
         </div>
 
-        <div class="field">
-            <p>How accurate is the information above? <a href="/statistics_form">Let us know</a>.</p>
-        </div>
+        {% if 'empty' in personal_statistics %}
+            <div class="field">
+                <p>How accurate is the information above? <a href="/statistics_form">Let us know</a>.</p>
+            </div>
+
+        {% else %}
+            <div class="box">
+                <p><b>Information You Entered:</b></p>
+                <ul>
+                    <li><b>Number of siblings:</b> {{ personal_statistics['siblings'] }}</li>
+                    <li><b>Average age of grandparents:</b> {{ personal_statistics['average_age'] }}</li>
+
+                    <li><b>You are currently in education, employment or training:</b> {{ personal_statistics['education'] }}</li>
+                    {% if current_user.age < 15 and current_user.age > 24 %}
+                        <p>(Data entered but not applicable)</p>
+                    {% endif %}
+
+                    <li><b>You use tobacco:</b> {{ personal_statistics['tobacco'] }}</li>
+                    {% if not is_applicable(current_user.age, "tobacco_use") %}
+                        <p>(Data entered but not applicable)</p>
+                    {% endif %}
+
+                    <li><b>You drink alcohol:</b> {{ personal_statistics['alcohol'] }}</li>
+                    {% if current_user.age < 15 and current_user.age > 19 %}
+                        <p>(Data entered but not applicable)</p>
+                    {% endif %}
+
+                    {% if causes_data %}
+                        <li><b>Selected mortality causes:</b>
+                            <ul>
+                                {% for cause in causes_data %}
+                                    <li>{{ cause }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li>No mortality causes were selected</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <p><i>If you want to edit the entered information, <a href="">press here</a> to edit it</i></p>
+        {% endif %}
 
     </div>
 

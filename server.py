@@ -50,10 +50,25 @@ def stats_page():
 
     adolescent_mortality_cause = Database().get_mortality_causes(country=country, sex=gender, age=current_user.age)
 
+    #Form access
+    form_data = Database().get_user_form(current_user.data['id'])
+    personal_statistics = {'empty' : True}
+    if(form_data != None):
+        personal_statistics = {
+            "siblings": form_data[0],
+            "average_age": form_data[1],
+            "education": form_data[2],
+            "tobacco": form_data[3],
+            "alcohol": form_data[4]
+        }
+    
+    causes_data = Database().get_user_causes(current_user.data['id'])
+    
     return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, 
     tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, 
     life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, 
-    sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality, adolescent_mortality_cause=adolescent_mortality_cause)
+    sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality, adolescent_mortality_cause=adolescent_mortality_cause,
+    personal_statistics = personal_statistics, causes_data=causes_data)
 
 @app.route("/your-page")
 @login_required
