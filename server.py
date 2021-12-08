@@ -101,14 +101,28 @@ def no_account_page():
 @app.route("/statistics_form")
 def statistics_form():
     values = {}
+    #If the query below returns None, then this data is not available for this user's country
+    causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+        
+    return render_template("statistics_form.html", values=values, causes=causes, handler="handle_statistics_form")
+
+@app.route("/statistics_edit")
+def statistics_edit_page():
     causes = {}
     #If the query below returns None, then this data is not available for this user's country
-    adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
-    #The form is going to have this field only if the data for mortality causes is available for this user
-    if(adolescent_mortality_cause != None):
-        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
-    return render_template("statistics_form.html", values=values, causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
+    causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+    
+    form_data = Database().get_user_form(current_user.data['id'])
+    if(form_data != None):
+        personal_statistics = {
+            "siblings": form_data[0],
+            "average_age": form_data[1],
+            "education": form_data[2],
+            "tobacco": form_data[3],
+            "drinking": form_data[4]
+        }
 
+    return render_template("statistics_form.html", values=personal_statistics, causes=causes, handler="handle_statistics_edit")
 
 def validate_registration(form):
     #Creating 2 dictionaries for errors and data
@@ -295,13 +309,8 @@ def handle_statistics_form():
     valid = validate_statistics_form(request.form)
     if not valid:
         #If some of the required fields were not filled, error messages are printed and the form is loaded again
-        #get_mortality_causes function is called in order to ensure the data is available for the current user's country 
-        adolescent_mortality_cause = Database().get_mortality_causes(country=current_user.data['country'], sex=current_user.data['gender'], age=current_user.age)
-        causes = {}
-        if(adolescent_mortality_cause != None):
-            #If the data is available, the function is called to get the options for the checkboxes 
-            causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
-        return render_template("statistics_form.html", causes=causes, adolescent_mortality_cause=adolescent_mortality_cause)
+        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+        return render_template("statistics_form.html", values=request.form, causes=causes, handler="handle_statistics_form")
 
     sibling_number = request.form.data['siblings']
 
@@ -335,6 +344,47 @@ def handle_statistics_form():
         Database().add_causes(current_user.data['id'], cause)
     #The rest of the entered information will be added to the form table with the current user id
     Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
+    #After the form is submitted, the user will be redirected back to the statistis page
+    return redirect(url_for('stats_page'))
+
+@app.route("/handle_statistics_edit", methods=['POST'])
+def handle_statistics_edit():
+    #The edit form works in a similar way to the original form. Thus, the same validation function is used.
+    valid = validate_statistics_form(request.form)
+    if not valid:
+        causes=Database().get_mortality_causes_form(current_user.data['country'], current_user.data['gender'])
+        return render_template("statistics_form.html", values=request.form, causes=causes, handler="handle_statistics_edit")
+
+    sibling_number = request.form.data['siblings']
+
+    grandparent1 = int(request.form.data['grandparent1'])
+    #The count variable is used to keep track of how many grandparents' ages were entered
+    count = 1
+    #The first grandparent has to be entered, the remaining ones are initialized with 0
+    grandparent2 = grandparent3 = grandparent4 = 0
+    if 'grandparent2' in request.form.data:
+        #If the second grandparent is entered, the value is cast into an integer and the count variable is incremented
+        grandparent2 = int(request.form.data['grandparent2'])
+        count += 1
+    if 'grandparent3' in request.form.data:
+        #The logic above applies to the remaining grandparents
+        grandparent3 = int(request.form.data['grandparent3'])
+        count += 1
+    if 'grandparent4' in request.form.data:
+        grandparent4 = int(request.form.data['grandparent4'])
+        count += 1
+    #Ater all the values are received, the average between the ages is found, using the count variable
+    gp_age = (grandparent1 + grandparent2 + grandparent3 + grandparent4) / count
+
+    is_education = request.form.data['education']
+    is_tobacco = request.form.data['tobacco']
+    is_alcohol = request.form.data['drinking']
+
+    #In order to access the entered checkbox data, a dictionary is created
+    form_causes = dict(request.form.lists()).get('cause', [])
+    Database().update_causes(current_user.data['id'], form_causes)
+    #The rest of the entered information will be added to the form table with the current user id
+    Database().update_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
     #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
 

@@ -44,6 +44,22 @@ class Database:
             connection.commit()
         return cursor.lastrowid
 
+    def update_form(self, siblings, grandparent_age, education, tobacco, alcohol, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "UPDATE form SET SIBLINGS = ?, GR_AGE = ?, EDUCATION = ?, TOBACCO = ?, ALCOHOL = ? WHERE (USER_ID = ?)"
+            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, user_id))
+            connection.commit()
+
+    def update_causes(self, user_id, causes):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "DELETE FROM mortality_causes WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id, ))
+            connection.commit()
+        for cause in causes:
+            self.add_causes(user_id, cause)
+
     # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:

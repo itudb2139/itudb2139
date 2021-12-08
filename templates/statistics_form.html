@@ -5,7 +5,7 @@
         <h3>Please answer the following questions in order to compare the average statistics with your personal profile</h3>
     </div>
     <div class="box">
-        <form action="{{ url_for('handle_statistics_form') }}" method="POST">
+        <form action="{{ url_for(handler) }}" method="POST">
 
             <div class="field">
                 <label for="siblings">How many siblings do you have?</label>
@@ -21,13 +21,13 @@
                 <p>What are your grandparents' age?/How old were they when they passed away?</p>
                 <div>
                     <label for="grandparent1">1.</label>
-                    <input type="number" id="age1" name="grandparent1" value="{{ values['grandparent1'] }}">
+                    <input type="number" id="age1" name="grandparent1" {% if 'grandparent1' in values %}value="{{ values['grandparent1'] }}"{% endif %}>
                     <label for="grandparent2">2.</label>
-                    <input type="number" id="age2" name="grandparent2" value="{{ values['grandparent2'] }}">
+                    <input type="number" id="age2" name="grandparent2" {% if 'grandparent2' in values %}value="{{ values['grandparent2'] }}"{% endif %}>
                     <label for="grandparent3">3.</label>
-                    <input type="number" id="age3" name="grandparent3" value="{{ values['grandparent3'] }}">
+                    <input type="number" id="age3" name="grandparent3" {% if 'grandparent3' in values %}value="{{ values['grandparent3'] }}"{% endif %}>
                     <label for="grandparent4">4.</label>
-                    <input type="number" id="age4" name="grandparent4" value="{{ values['grandparent4'] }}">
+                    <input type="number" id="age4" name="grandparent4" {% if 'grandparent4' in values %}value="{{ values['grandparent4'] }}"{% endif %}>
                 </div>
                 {% if 'grandparent1' in values.errors %}
                     <p class = "help is-danger">
@@ -80,7 +80,7 @@
                     </p>
                 {% endif %}   
             </div>
-            {% if adolescent_mortality_cause != None %}
+            {% if causes != None %}
                 <div class="field">
                     <p>Do you have any familty members that have passed from any of the following causes?(Select all that apply)<p>
                     {% for cause in causes %}
