@@ -23,6 +23,8 @@ class Database:
     def delete_user(self, id):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
+            query = "PRAGMA foreign_keys=on"
+            cursor.execute(query)
             query = "DELETE FROM users WHERE (ID = ?)"
             cursor.execute(query, (id,))
             connection.commit()

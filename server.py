@@ -129,6 +129,14 @@ def delete_form():
     Database().delete_form(current_user.data['id'])
     return redirect(url_for('stats_page'))
 
+@app.route("/delete_user")
+def delete_user():
+    id = current_user.data['id']
+    logout_user()
+    Database().delete_user(id)
+    return render_template("home.html", current_user=current_user)
+
+
 def validate_registration(form):
     #Creating 2 dictionaries for errors and data
     form.data = {}
