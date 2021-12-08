@@ -40,3 +40,16 @@ Week 5:
 -Function added to validate submitted data and print errors
 -Function added to handle the submitted data and add it to the table
 -CSS is added to the statistics form page
+ 
+Week 6:
+-Statistics form updated
+-Mortality causes table added to the database
+-Methods to add the submitted data to the respective tables added
+-Comments to the python files added
+-Methods to access the entered form from the database added
+-Statistics page html editted to display the submitted form
+
+Week 7:
+-Methods to update the submitted form added (both tables)
+-Methods to delete the submitted form from the database added
+-Method to delete the user from the database added (from all the tables)
