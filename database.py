@@ -60,6 +60,15 @@ class Database:
         for cause in causes:
             self.add_causes(user_id, cause)
 
+    def delete_form(self, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "DELETE FROM form WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id, ))
+            query = "DELETE FROM mortality_causes WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id, ))
+            connection.commit()
+
     # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:

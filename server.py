@@ -124,6 +124,11 @@ def statistics_edit_page():
 
     return render_template("statistics_form.html", values=personal_statistics, causes=causes, handler="handle_statistics_edit")
 
+@app.route("/delete_form")
+def delete_form():
+    Database().delete_form(current_user.data['id'])
+    return redirect(url_for('stats_page'))
+
 def validate_registration(form):
     #Creating 2 dictionaries for errors and data
     form.data = {}
