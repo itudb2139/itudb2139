@@ -53,3 +53,9 @@ Week 7:
 -Methods to update the submitted form added (both tables)
 -Methods to delete the submitted form from the database added
 -Method to delete the user from the database added (from all the tables)
+
+Week 8:
+-Information entered by the user is processed
+-Methods to calculate the accuracy of the predicted statistics added
+-Statiscs page updated to display the accuracy
+-Small fixes to the statistics page
