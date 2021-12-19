@@ -3,4 +3,3 @@ Work in Progress:
 -Statistics page global data
 -Edit Home Page
 -Latest year for statistics provided
--Accuracy of statistics calculations
