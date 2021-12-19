@@ -63,12 +63,55 @@ def stats_page():
         }
     
     causes_data = Database().get_user_causes(current_user.data['id'])
+
+    #Form assessment
+    accurate = 0
+
+    sib_difference = abs(personal_statistics['siblings'] - fertility)
+    if(sib_difference < 1):
+        accurate = accurate + 1
+
+    if personal_statistics['average_age'] <= life_expectancy_birth:
+        accurate = accurate + 1
+
+    if(current_user.age > 15 and current_user.age < 24):
+        if education != None:
+            if(education <= 50 and personal_statistics['education'] == "No"):
+                accurate = accurate + 1
+            elif(education > 50 and personal_statistics['education'] == "Yes"):
+                accurate = accurate + 1
+    else:
+        accurate = accurate + 1
+    
+    if Database().is_applicable(current_user.age, "tobacco_use"):
+        if tobacco_use != None:
+            if(education <= 50 and personal_statistics['tobacco'] == "No"):
+                accurate = accurate + 1
+            elif(education > 50 and personal_statistics['tobacco'] == "Yes"):
+                accurate = accurate + 1
+    else:
+        accurate = accurate + 1
+
+    if(current_user.age > 15 and current_user.age < 19):
+        if drinking != None:
+            if(education <= 50 and personal_statistics['alcohol'] == "No"):
+                accurate = accurate + 1
+            elif(education > 50 and personal_statistics['alcohol'] == "Yes"):
+                accurate = accurate + 1
+    else:
+        accurate = accurate + 1
+    
+    if causes_data:
+        accurate = accurate + 1
+
+    #Calculate accuracy
+    accuracy = (accurate / 6) * 100      
     
     return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, 
     tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, 
     life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, 
     sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality, adolescent_mortality_cause=adolescent_mortality_cause,
-    personal_statistics = personal_statistics, causes_data=causes_data)
+    personal_statistics = personal_statistics, causes_data=causes_data, accuracy=accuracy)
 
 @app.route("/your-page")
 @login_required
