@@ -122,7 +122,7 @@
                     <li><b>Average age of grandparents:</b> {{ personal_statistics['average_age'] }}</li>
 
                     <li><b>You are currently in education, employment or training:</b> {{ personal_statistics['education'] }}</li>
-                    {% if current_user.age < 15 and current_user.age > 24 %}
+                    {% if current_user.age < 15 or current_user.age > 24 %}
                         <p>(Data entered but not applicable)</p>
                     {% endif %}
 
@@ -132,7 +132,7 @@
                     {% endif %}
 
                     <li><b>You drink alcohol:</b> {{ personal_statistics['alcohol'] }}</li>
-                    {% if current_user.age < 15 and current_user.age > 19 %}
+                    {% if current_user.age < 15 or current_user.age > 19 %}
                         <p>(Data entered but not applicable)</p>
                     {% endif %}
 
@@ -148,6 +148,7 @@
                         <li>No mortality causes were selected</li>
                     {% endif %}
                 </ul>
+                <p>Based on the information you provided, the predicted statistics is <b>{{ accuracy }}</b>% accurate.</p>
             </div>
             <p><i>If you want to edit the entered information, <a href="/statistics_edit">press here</a> to edit it</i></p>
             <a class="button is-danger" href="/delete_form">Delete Form</a>
