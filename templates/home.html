@@ -20,6 +20,32 @@
             </p>
         </div>
 
+        <div class="box">
+            <div class="content">
+                Global Statistics:
+                <ul>
+                    {% set most_births = database.get_most_births() %}
+                    <li>The most fertile country is <b>{{ most_births[0] }}</b> with <b>{{ most_births[1] }}</b> live births per woman.</li>
+                    
+                    {% set least_births = database.get_least_births() %}
+                    <li>The least fertile country is <b>{{ least_births[0] }}</b> with <b>{{ least_births[1] }}</b> live births per woman.</li>
+
+                    {% set most_education = database.get_most_education() %}
+                    <li>The country with the highest proportion of young people aged 15-24 not in education, employment or training with <b>{{ most_education[1] }}%</b> is <b>{{ most_education[0] }}</b>.</li>
+                    
+                    {% set least_education = database.get_least_education() %}
+                    <li>The country with the smallest proportion of young people aged 15-24 not in education, employment or training with <b>{{ least_education[1] }}%</b> is <b>{{ least_education[0] }}</b>.</li>
+
+                    {% set most_tobacco = database.get_most_tobacco() %}
+                    <li>The country with the highest prevalence of current tobacco use among adolescents with <b>{{ most_tobacco[1] }}%</b> is <b>{{ most_tobacco[0] }}</b>.</li>
+
+                    {% set least_tobacco = database.get_least_tobacco() %}
+                    <li>The country with the smallest prevalence of current tobacco use among adolescents with <b>{{ least_tobacco[1] }}%</b> is <b>{{ least_tobacco[0] }}</b>.</li>
+                </ul>
+            </div>
+                
+        </div>
+
         <p>Work in progress...</p>
     </div>
 
