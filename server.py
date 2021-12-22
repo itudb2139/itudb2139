@@ -13,7 +13,8 @@ app.secret_key = "81b8316d99a3337cdf36791702a2a2e36296ffc0b531c2cd46ff1926abc107
 
 @app.route("/")
 def home_page():
-    return render_template("home.html", current_user=current_user)
+
+    return render_template("home.html", current_user=current_user, database=Database())
 
 @app.route("/statistics")
 @login_required
@@ -135,7 +136,7 @@ def edit_page():
 @app.route("/logout")
 def log_out():
     logout_user()
-    return render_template("home.html", current_user=current_user)
+    return redirect(url_for("home_page"))
 
 @app.route("/no_account")
 def no_account_page():
