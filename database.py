@@ -302,6 +302,48 @@ class Database:
 
         return causes
 
+    #Data access for the home page
+    def get_most_births(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM total_fertility WHERE (YEAR = 2020) ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_births(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM total_fertility WHERE (YEAR = 2020) ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_most_education(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM young_education WHERE (SEX = 'Both sexes') ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_education(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM young_education WHERE (SEX = 'Both sexes') ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_most_tobacco(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM tobacco_use WHERE (SEX = 'Both sexes') ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_tobacco(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM tobacco_use WHERE (SEX = 'Both sexes') ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
 
 
 #Function to check if the user's age is in the given age group
