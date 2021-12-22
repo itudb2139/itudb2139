@@ -5,6 +5,21 @@
     <div class="content">
         <h3 class="title">Welcome, {{ current_user.data['first_name'] }}</h3>
         {% endif %}
+        <div class="content">
+            <p>This is a website that gives general social statistics of different countries and regions. 
+                On this page you can see the kind of statistics we provide. If you decide to sign up,
+                you can get personalized statistics, according to your country of birth, age and gender. 
+            </p>
+        </div>
+
+        <div class = "notification is-danger">
+            <p><b>Disclaimer: </b> 
+                The data used in this project was taken from WHO database <i>Maternal, newborn, child and adolescent health and ageing</i>,
+                which can be accessed from <a href="https://www.who.int/data/maternal-newborn-child-adolescent-ageing">this link.</a>
+                The provided statistics were not calculated by a statistition and are not accurate.
+            </p>
+        </div>
+
         <p>Work in progress...</p>
     </div>
 
