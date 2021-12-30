@@ -16,6 +16,11 @@
                 <input type="radio" id="yes" name="experience" value="Yes">
                 <label class="no">No</label>
                 <input type="radio" id="no" name="experience" value="No">
+                {% if 'experience' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['experience'] }}
+                    </p>
+                {% endif %}
             </div>
         </div>
 
@@ -26,6 +31,11 @@
                 <input type="radio" id="yes" name="recommend" value="Yes">
                 <label class="no">No</label>
                 <input type="radio" id="no" name="recommend" value="No">
+                {% if 'recommend' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['recommend'] }}
+                    </p>
+                {% endif %}
             </div>
         </div>
 
@@ -33,22 +43,41 @@
             <label for="accuracy">How accurate were the personalized statistics?</label><br>
             <div class="accuracy">
                 <label class="very">Very accurate</label>
-                <input type="radio" id="very" name="accuracy" value="Very">
+                <input type="radio" id="very" name="accuracy" value="Very"><br>
                 <label class="somewhat">Somewhat Accurate</label>
-                <input type="radio" id="somewhat" name="accuracy" value="Somewhat">
+                <input type="radio" id="somewhat" name="accuracy" value="Somewhat"><br>
                 <label class="not">Not Accurate</label>
                 <input type="radio" id="not" name="accuracy" value="Not">
+                {% if 'accuracy' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['accuracy'] }}
+                    </p>
+                {% endif %}
             </div>
         </div>
 
         <div class="field">
             <label for="morestats">What other statistics would you like to see?</label>
             <input type="text" id="morestats" name="morestats">
+            {% if 'morestats' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['morestats'] }}
+                </p>
+            {% endif %}
         </div>
 
         <div class="field">
             <label for="comments">Other comments:</label>
             <input type="text" id="comments" name="comments">
+            {% if 'comments' in values.errors %}
+                <p class = "help is-danger">
+                    {{ values.errors['comments'] }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="field">
+            <button class="button is-light" type="submit">Submit</button>
         </div>
 
     </form>
