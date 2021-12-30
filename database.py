@@ -71,6 +71,29 @@ class Database:
             cursor.execute(query, (user_id, ))
             connection.commit()
 
+    # Review table
+    def add_review(self, experience, recommend, accuracy, more_statistics, comment, date, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "INSERT INTO review (EXPERIENCE, RECOMMEND, ACCURACY, MORE_STATISTICS, COMMENTS, DATE, USER_ID) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(query, (experience, recommend, accuracy, more_statistics, comment, date, user_id))
+            connection.commit()
+        return cursor.lastrowid
+
+    def update_review(self, experience, recommend, accuracy, more_statistics, comments, date, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "UPDATE review SET EXPERIENCE = ?, RECOMMEND = ?, ACCURACY = ?, MORE_STATISTICS = ?, COMMENTS = ?, DATE = ? WHERE (USER_ID = ?)"
+            cursor.execute(query, (experience, recommend, accuracy, more_statistics, comments, date, user_id))
+            connection.commit()
+
+    def delete_review(self, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "DELETE FROM review WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id, ))
+            connection.commit()
+
     # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:
@@ -301,6 +324,13 @@ class Database:
         causes = [row[1] for row in rows]
 
         return causes
+
+    def get_review(self, id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT * FROM review WHERE (USER_ID = ?)"
+            cursor.execute(query, (id, ))
+        return cursor.fetchone()
 
     #Data access for the home page
     def get_most_births(self):
