@@ -59,3 +59,11 @@ Week 8:
 -Methods to calculate the accuracy of the predicted statistics added
 -Statiscs page updated to display the accuracy
 -Small fixes to the statistics page
+
+Week 9:
+-Home Page edited to display some information and disclaimers about the website
+-Methods added to Database to access the data for the Home Page
+-Home Page edited to display the global data 
+
+Week 10:
+-Review page html created
