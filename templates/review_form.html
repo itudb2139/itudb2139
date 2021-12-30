@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Review{% endblock %}
+{% block content %}
+
+<div class="content">
+    <h3>Please answer the questions below</h3>
+</div>
+
+<div class="box">
+    <form action="{{ url_for(handler) }}" method="POST">
+
+        <div class="field">
+            <label for="experience">Did you like this experience?</label><br>
+            <div class="experience">
+                <label class="yes">Yes</label>
+                <input type="radio" id="yes" name="experience" value="Yes">
+                <label class="no">No</label>
+                <input type="radio" id="no" name="experience" value="No">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="recommend">Would you recommend this to your friends?</label><br>
+            <div class="recommend">
+                <label class="yes">Yes</label>
+                <input type="radio" id="yes" name="recommend" value="Yes">
+                <label class="no">No</label>
+                <input type="radio" id="no" name="recommend" value="No">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="accuracy">How accurate were the personalized statistics?</label><br>
+            <div class="accuracy">
+                <label class="very">Very accurate</label>
+                <input type="radio" id="very" name="accuracy" value="Very">
+                <label class="somewhat">Somewhat Accurate</label>
+                <input type="radio" id="somewhat" name="accuracy" value="Somewhat">
+                <label class="not">Not Accurate</label>
+                <input type="radio" id="not" name="accuracy" value="Not">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="morestats">What other statistics would you like to see?</label>
+            <input type="text" id="morestats" name="morestats">
+        </div>
+
+        <div class="field">
+            <label for="comments">Other comments:</label>
+            <input type="text" id="comments" name="comments">
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}
