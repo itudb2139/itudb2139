@@ -151,9 +151,19 @@
                 <p>Based on the information you provided, the predicted statistics is <b>{{ accuracy }}</b>% accurate.</p>
             </div>
             <p><i>If you want to edit the entered information, <a href="/statistics_edit">press here</a> to edit it</i></p>
-            <a class="button is-danger" href="/delete_form">Delete Form</a>
+            <div class="content">
+                <a class="button is-danger" href="/delete_form">Delete Form</a>
+            </div>
         {% endif %}
 
+        {% if has_review == None%}
+        <div class="field">
+            <p><i>Consider leaving a review <a href="/review_form">here</a></i></p>
+        </div>
+        {% else %}
+            <p>Looks like you have already left a review. You can <a href="">edit it</a> or <b><a href="">delete it</a></b></p>
+
+        {% endif %}
     </div>
 
 
