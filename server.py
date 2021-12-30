@@ -6,6 +6,7 @@ import bcrypt
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from database import Database
 import login
+import datetime
 
 app = Flask(__name__)
 
@@ -106,13 +107,15 @@ def stats_page():
         accurate = accurate + 1
 
     #Calculate accuracy
-    accuracy = (accurate / 6) * 100      
+    accuracy = (accurate / 6) * 100 
+
+    has_review = Database().get_review(current_user.data['id'])   
     
     return render_template("statistics.html", current_user=current_user, fertility=fertility, is_applicable = Database().is_applicable, 
     tobacco_use=tobacco_use, tuberculosis=tuberculosis_rate, hepb = hepb, education=education, poverty=poverty, 
     life_expectancy_birth=life_expectancy_birth, life_expectancy_old=life_expectancy_old, physical_activity=physical_activity, drinking=drinking, 
     sanitation=sanitation, water=water, adolescent_mortality=adolescent_mortality, adolescent_mortality_cause=adolescent_mortality_cause,
-    personal_statistics = personal_statistics, causes_data=causes_data, accuracy=accuracy)
+    personal_statistics = personal_statistics, causes_data=causes_data, accuracy=accuracy, has_review=has_review)
 
 @app.route("/your-page")
 @login_required
@@ -168,6 +171,11 @@ def statistics_edit_page():
 
     return render_template("statistics_form.html", values=personal_statistics, causes=causes, handler="handle_statistics_edit")
 
+@app.route("/review_form")
+def review_form():
+    values = {}
+    return render_template("review_form.html", values=values, handler="handle_review_form")
+
 @app.route("/delete_form")
 def delete_form():
     Database().delete_form(current_user.data['id'])
@@ -180,6 +188,10 @@ def delete_user():
     Database().delete_user(id)
     return render_template("home.html", current_user=current_user)
 
+@app.route("/delete_review")
+def delete_review():
+    Database().delete_review(current_user.data['id'])
+    return redirect(url_for('stats_page'))
 
 def validate_registration(form):
     #Creating 2 dictionaries for errors and data
@@ -444,6 +456,66 @@ def handle_statistics_edit():
     Database().update_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
     #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
+
+def validate_review(form):
+    #Creating 2 dictionaries for errors and data
+    form.data = {}
+    form.errors = {}
+        
+    form_experience = form.get('experience', '')
+    if len(form_experience) == 0:
+        form.errors['experience'] = "This field cannot be blank"
+    else:
+        form.data['experience'] = form_experience
+
+    form_recommend= form.get('recommend', '')
+    if len(form_recommend) == 0:
+        form.errors['recommend'] = "This field cannot be blank"
+    else:
+        form.data['recommend'] = form_recommend
+
+    form_accuracy = form.get('accuracy', '')
+    if len(form_accuracy) == 0:
+        form.errors['accuracy'] = "This field cannot be blank"
+    else:
+        form.data['accuracy'] = form_accuracy
+
+    form_morestats = form['morestats']
+    if len(form_morestats) == 0:
+        form.errors['morestats'] = "This field cannot be blank"
+    else:
+        form.data['morestats'] = form_morestats
+
+    form_comments = form['comments']
+    if len(form_comments) == 0:
+        form.errors['comments'] = "This field cannot be blank"
+    else:
+        form.data['comments'] = form_comments
+
+    #The function returns true if there were no errors (all the required fields were filled)
+    return len(form.errors) == 0
+    
+
+@app.route("/handle_review_form", methods=['POST'])
+def handle_review_form():
+    valid = validate_review(request.form)
+    if not valid:
+        #If some of the required fields were not filled, error messages are printed and the form is loaded again
+        return render_template("review_form.html", values=request.form, handler="handle_review_form")
+
+    form_experience = request.form.data['experience']
+    form_recommend = request.form.data['recommend']
+    form_accuracy = request.form.data['accuracy']
+    form_more_statistics = request.form.data['morestats']
+    form_comments = request.form.data['comments']
+
+    today = datetime.date.today()
+    today_string = today.strftime("%d%m%Y")
+
+    Database().add_review(form_experience, form_recommend, form_accuracy, form_more_statistics, form_comments, today_string, current_user.data['id'])
+    #After the form is submitted, the user will be redirected back to the statistis page
+    return redirect(url_for('stats_page'))
+
 
 #Function to create hash for the password
 def create_hash(password):
