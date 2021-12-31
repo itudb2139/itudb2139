@@ -41,12 +41,35 @@
 
                     {% set least_tobacco = database.get_least_tobacco() %}
                     <li>The country with the smallest prevalence of current tobacco use among adolescents with <b>{{ least_tobacco[1] }}%</b> is <b>{{ least_tobacco[0] }}</b>.</li>
+
+                    {% set most_expectancy = database.get_most_expectancy() %}
+                    <li>The country with the longest life expactancy of <b>{{ most_expectancy[1] }}</b> years is <b>{{ most_expectancy[0] }}</b>.</li>
+
+                    {% set least_expectancy = database.get_least_expectancy() %}
+                    <li>The country with the shortest life expactancy of <b>{{ least_expectancy[1] }}</b> years is <b>{{ least_expectancy[0] }}</b>.</li>
+
+                    {% set most_poverty = database.get_most_poverty() %}
+                    <li>The country with the highest proportion of population below the international poverty line with <b>{{ most_poverty[1] }}</b>% is <b>{{ most_poverty[0] }}</b>.</li>
+
+                    {% set least_poverty = database.get_least_poverty() %}
+                    <li>The country with the lowest proportion of population below the international poverty line with <b>{{ least_poverty[1] }}</b>% is <b>{{ least_poverty[0] }}</b>.</li>
+
+                    {% set most_water = database.get_most_basic_drinking() %}
+                    <li>The country with the highest proportion of population using at least basic drinking-water services with <b>{{ most_water[1] }}</b>% is <b>{{ most_water[0] }}</b></li>
+
+                    {% set least_water = database.get_least_basic_drinking() %}
+                    <li>The country with the lowest proportion of population using at least basic drinking-water services with <b>{{ least_water[1] }}</b>% is <b>{{ least_water[0] }}</b></li>
+
+                    {% set most_sanitation = database.get_most_sanitation() %}
+                    <li>The country with the highest proportion of population using at least basic sanitation services with <b>{{ most_sanitation[1] }}</b>% is <b>{{ most_sanitation[0] }}</b></li>
+
+                    {% set least_sanitation = database.get_least_sanitation() %}
+                    <li>The country with the lowest proportion of population using at least basic sanitation services with <b>{{ least_sanitation[1] }}</b>% is <b>{{ least_sanitation[0] }}</b></li>
                 </ul>
             </div>
                 
         </div>
 
-        <p>Work in progress...</p>
     </div>
 
 {% endblock %}
