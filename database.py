@@ -374,7 +374,62 @@ class Database:
             query = "SELECT COUNTRY, VALUE FROM tobacco_use WHERE (SEX = 'Both sexes') ORDER BY VALUE ASC"
             cursor.execute(query)
         return cursor.fetchone()
+    
+    def get_most_expectancy(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM life_expectancy_birth WHERE (SEX = 'Both sexes') ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
 
+    def get_least_expectancy(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM life_expectancy_birth WHERE (SEX = 'Both sexes') ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_most_poverty(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM population_poverty ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_poverty(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM population_poverty ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_most_basic_drinking(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM water_services WHERE (RESIDENCE_AREA = 'All') ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_basic_drinking(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM water_services WHERE (RESIDENCE_AREA = 'All') ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_most_sanitation(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM sanitation_services WHERE (RESIDENCE_AREA = 'All') ORDER BY VALUE DESC"
+            cursor.execute(query)
+        return cursor.fetchone()
+
+    def get_least_sanitation(self):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT COUNTRY, VALUE FROM sanitation_services WHERE (RESIDENCE_AREA = 'All') ORDER BY VALUE ASC"
+            cursor.execute(query)
+        return cursor.fetchone()
 
 #Function to check if the user's age is in the given age group
 def is_age_in_range(age, group):
