@@ -67,3 +67,11 @@ Week 9:
 
 Week 10:
 -Review page html created
+-Methods for create, update and delete for the review table added
+-Method to access the new table added
+-Statistics page edited to add/update/delete the review
+-Review form edited to display the error messages
+-More database access function added for diplaying global statistics on the home page
+-Home page edited to display all global statistics
+-Functions to update and handle the edit of review form added
+-Review page edited to autofill values for edits
