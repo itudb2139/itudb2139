@@ -176,6 +176,20 @@ def review_form():
     values = {}
     return render_template("review_form.html", values=values, handler="handle_review_form")
 
+@app.route("/review_edit")
+def review_edit():
+    review_data = Database().get_review(current_user.data['id'])
+    if(review_data != None):
+        user_review = {
+            "experience": review_data[0],
+            "recommend": review_data[1],
+            "accuracy": review_data[2],
+            "more_statistics": review_data[3],
+            "comments": review_data[4]
+        }
+
+    return render_template("review_form.html", values=user_review, handler="handle_review_edit")
+
 @app.route("/delete_form")
 def delete_form():
     Database().delete_form(current_user.data['id'])
@@ -516,6 +530,23 @@ def handle_review_form():
     #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
 
+@app.route("/handle_review_edit", methods=['POST'])
+def handle_review_edit():
+    valid = validate_review(request.form)
+    if not valid:
+        return render_template("review_form.html", values=request.form, handler="handle_review_edit")
+    
+    form_experience = request.form.data['experience']
+    form_recommend = request.form.data['recommend']
+    form_accuracy = request.form.data['accuracy']
+    form_more_statistics = request.form.data['morestats']
+    form_comments = request.form.data['comments']
+
+    today = datetime.date.today()
+    today_string = today.strftime("%d%m%Y")
+
+    Database().update_review(form_experience, form_recommend, form_accuracy, form_more_statistics, form_comments, today_string, current_user.data['id'])
+    return redirect(url_for('stats_page'))
 
 #Function to create hash for the password
 def create_hash(password):
