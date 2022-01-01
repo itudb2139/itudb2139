@@ -30,11 +30,11 @@ class Database:
             connection.commit()
 
     # Form Table
-    def add_form(self, siblings, grandparent_age, education, tobacco, alcohol, user_id):
+    def add_form(self, siblings, grandparent_age, education, tobacco, alcohol, exercise, user_id):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "INSERT INTO form (SIBLINGS, GR_AGE, EDUCATION, TOBACCO, ALCOHOL, USER_ID) VALUES (?, ?, ?, ?, ?, ?)"
-            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, user_id))
+            query = "INSERT INTO form (SIBLINGS, GR_AGE, EDUCATION, TOBACCO, ALCOHOL, EXERCISE, USER_ID) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, exercise, user_id))
             connection.commit()
         return cursor.lastrowid
 
@@ -46,11 +46,11 @@ class Database:
             connection.commit()
         return cursor.lastrowid
 
-    def update_form(self, siblings, grandparent_age, education, tobacco, alcohol, user_id):
+    def update_form(self, siblings, grandparent_age, education, tobacco, alcohol, exercise, user_id):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "UPDATE form SET SIBLINGS = ?, GR_AGE = ?, EDUCATION = ?, TOBACCO = ?, ALCOHOL = ? WHERE (USER_ID = ?)"
-            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, user_id))
+            query = "UPDATE form SET SIBLINGS = ?, GR_AGE = ?, EDUCATION = ?, TOBACCO = ?, ALCOHOL = ?, EXERCISE = ? WHERE (USER_ID = ?)"
+            cursor.execute(query, (siblings, grandparent_age, education, tobacco, alcohol, exercise, user_id))
             connection.commit()
 
     def update_causes(self, user_id, causes):
