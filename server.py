@@ -61,53 +61,66 @@ def stats_page():
             "average_age": form_data[1],
             "education": form_data[2],
             "tobacco": form_data[3],
-            "alcohol": form_data[4]
+            "alcohol": form_data[4],
+            "exercise": form_data[5]
         }
     
     causes_data = Database().get_user_causes(current_user.data['id'])
 
     #Form assessment
-    accurate = 0
+    if(form_data != None):
+        accurate = 0
 
-    sib_difference = abs(personal_statistics['siblings'] - fertility)
-    if(sib_difference < 1):
-        accurate = accurate + 1
+        sib_difference = abs(personal_statistics['siblings'] - fertility)
+        if(sib_difference < 1):
+            accurate = accurate + 1
 
-    if personal_statistics['average_age'] <= life_expectancy_birth:
-        accurate = accurate + 1
+        if personal_statistics['average_age'] <= life_expectancy_birth:
+            accurate = accurate + 1
 
-    if(current_user.age > 15 and current_user.age < 24):
-        if education != None:
-            if(education <= 50 and personal_statistics['education'] == "No"):
-                accurate = accurate + 1
-            elif(education > 50 and personal_statistics['education'] == "Yes"):
-                accurate = accurate + 1
+        if(current_user.age > 15 and current_user.age < 24):
+            if education != None:
+                if(education <= 50 and personal_statistics['education'] == "No"):
+                    accurate = accurate + 1
+                elif(education > 50 and personal_statistics['education'] == "Yes"):
+                    accurate = accurate + 1
+        else:
+            accurate = accurate + 1
+        
+        if Database().is_applicable(current_user.age, "tobacco_use"):
+            if tobacco_use != None:
+                if(tobacco_use <= 50 and personal_statistics['tobacco'] == "No"):
+                    accurate = accurate + 1
+                elif(tobacco_use > 50 and personal_statistics['tobacco'] == "Yes"):
+                    accurate = accurate + 1
+        else:
+            accurate = accurate + 1
+
+        if(current_user.age > 15 and current_user.age < 19):
+            if drinking != None:
+                if(drinking <= 50 and personal_statistics['alcohol'] == "No"):
+                    accurate = accurate + 1
+                elif(drinking > 50 and personal_statistics['alcohol'] == "Yes"):
+                    accurate = accurate + 1
+        else:
+            accurate = accurate + 1
+
+        if(current_user.age >= 11 and current_user.age <= 17):
+            if physical_activity != None:
+                if(physical_activity <= 50 and personal_statistics['exercise'] == "No"):
+                    accurate = accurate + 1
+                elif(physical_activity > 50 and personal_statistics['exercise'] == "Yes"):
+                    accurate = accurate + 1
+        else:
+            accurate = accurate + 1
+        
+        if causes_data:
+            accurate = accurate + 1
+
+        #Calculate accuracy
+        accuracy = (accurate / 7) * 100 
     else:
-        accurate = accurate + 1
-    
-    if Database().is_applicable(current_user.age, "tobacco_use"):
-        if tobacco_use != None:
-            if(education <= 50 and personal_statistics['tobacco'] == "No"):
-                accurate = accurate + 1
-            elif(education > 50 and personal_statistics['tobacco'] == "Yes"):
-                accurate = accurate + 1
-    else:
-        accurate = accurate + 1
-
-    if(current_user.age > 15 and current_user.age < 19):
-        if drinking != None:
-            if(education <= 50 and personal_statistics['alcohol'] == "No"):
-                accurate = accurate + 1
-            elif(education > 50 and personal_statistics['alcohol'] == "Yes"):
-                accurate = accurate + 1
-    else:
-        accurate = accurate + 1
-    
-    if causes_data:
-        accurate = accurate + 1
-
-    #Calculate accuracy
-    accuracy = (accurate / 6) * 100 
+        accuracy = 0
 
     has_review = Database().get_review(current_user.data['id'])   
     
@@ -384,6 +397,12 @@ def validate_statistics_form(form):
     else:
         form.data['drinking'] = form_drinking
 
+    form_exercise = form.get('exercise', '')
+    if len(form_exercise) == 0:
+        form.errors['exercise'] = "This field cannot be blank"
+    else:
+        form.data['exercise'] = form_exercise
+
     #The function returns true if there were no errors (all the required fields were filled)
     return len(form.errors) == 0
 
@@ -419,6 +438,7 @@ def handle_statistics_form():
     is_education = request.form.data['education']
     is_tobacco = request.form.data['tobacco']
     is_alcohol = request.form.data['drinking']
+    is_exercise = request.form.data['exercise']
 
     #In order to access the entered checkbox data, a dictionary is created
     form_causes = dict(request.form.lists()).get('cause', [])
@@ -426,7 +446,7 @@ def handle_statistics_form():
     for cause in form_causes:
         Database().add_causes(current_user.data['id'], cause)
     #The rest of the entered information will be added to the form table with the current user id
-    Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
+    Database().add_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, is_exercise, current_user.data['id'])
     #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
 
@@ -462,12 +482,13 @@ def handle_statistics_edit():
     is_education = request.form.data['education']
     is_tobacco = request.form.data['tobacco']
     is_alcohol = request.form.data['drinking']
+    is_exercise = request.form.data['exercise']
 
     #In order to access the entered checkbox data, a dictionary is created
     form_causes = dict(request.form.lists()).get('cause', [])
     Database().update_causes(current_user.data['id'], form_causes)
     #The rest of the entered information will be added to the form table with the current user id
-    Database().update_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, current_user.data['id'])
+    Database().update_form(sibling_number, gp_age, is_education, is_tobacco, is_alcohol, is_exercise, current_user.data['id'])
     #After the form is submitted, the user will be redirected back to the statistis page
     return redirect(url_for('stats_page'))
 
