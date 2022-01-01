@@ -80,6 +80,22 @@
                     </p>
                 {% endif %}   
             </div>
+
+            <div class="field">
+                <label for="exercise">Do you exercise often?</label><br>
+                <div id="exercise">
+                    <label for="yes">Yes</label>
+                    <input type="radio" id="yes" name="exercise" value="Yes" {% if values['exercise'] == "Yes" %}checked{% endif %}>
+                    <label for="no">No</label> 
+                    <input type="radio" id="no" name="exercise" value="No" {% if values['exercise'] == "No" %}checked{% endif %}>
+                </div>
+                {% if 'exercise' in values.errors %}
+                    <p class = "help is-danger">
+                        {{ values.errors['exercise'] }}
+                    </p>
+                {% endif %}
+            </div>
+
             {% if causes != None %}
                 <div class="field">
                     <p>Do you have any familty members that have passed from any of the following causes?(Select all that apply)<p>
