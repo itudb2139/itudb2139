@@ -136,6 +136,11 @@
                         <p>(Data entered but not applicable)</p>
                     {% endif %}
 
+                    <li><b>You exercise often:</b> {{personal_statistics['exercise']}}</li>
+                    {% if current_user.age < 11 or current_user.age > 17 %}
+                        <p>(Data entered but not applicable)</p>
+                    {% endif %}
+
                     {% if causes_data %}
                         <li><b>Selected mortality causes:</b>
                             <ul>
