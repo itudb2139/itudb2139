@@ -13,9 +13,9 @@
             <label for="experience">Did you like this experience?</label><br>
             <div class="experience">
                 <label class="yes">Yes</label>
-                <input type="radio" id="yes" name="experience" value="Yes">
+                <input type="radio" id="yes" name="experience" value="Yes" {% if values['experience'] == "Yes" %}checked{% endif %}>
                 <label class="no">No</label>
-                <input type="radio" id="no" name="experience" value="No">
+                <input type="radio" id="no" name="experience" value="No" {% if values['experience'] == "No" %}checked{% endif %}>
                 {% if 'experience' in values.errors %}
                     <p class = "help is-danger">
                         {{ values.errors['experience'] }}
@@ -28,9 +28,9 @@
             <label for="recommend">Would you recommend this to your friends?</label><br>
             <div class="recommend">
                 <label class="yes">Yes</label>
-                <input type="radio" id="yes" name="recommend" value="Yes">
+                <input type="radio" id="yes" name="recommend" value="Yes" {% if values['recommend'] == "Yes" %}checked{% endif %}>
                 <label class="no">No</label>
-                <input type="radio" id="no" name="recommend" value="No">
+                <input type="radio" id="no" name="recommend" value="No" {% if values['recommend'] == "No" %}checked{% endif %}>
                 {% if 'recommend' in values.errors %}
                     <p class = "help is-danger">
                         {{ values.errors['recommend'] }}
@@ -43,11 +43,11 @@
             <label for="accuracy">How accurate were the personalized statistics?</label><br>
             <div class="accuracy">
                 <label class="very">Very accurate</label>
-                <input type="radio" id="very" name="accuracy" value="Very"><br>
+                <input type="radio" id="very" name="accuracy" value="Very" {% if values['accuracy'] == "Very" %}checked{% endif %}><br>
                 <label class="somewhat">Somewhat Accurate</label>
-                <input type="radio" id="somewhat" name="accuracy" value="Somewhat"><br>
+                <input type="radio" id="somewhat" name="accuracy" value="Somewhat" {% if values['accuracy'] == "Somewhat" %}checked{% endif %}><br>
                 <label class="not">Not Accurate</label>
-                <input type="radio" id="not" name="accuracy" value="Not">
+                <input type="radio" id="not" name="accuracy" value="Not" {% if values['accuracy'] == "Not" %}checked{% endif %}>
                 {% if 'accuracy' in values.errors %}
                     <p class = "help is-danger">
                         {{ values.errors['accuracy'] }}
@@ -58,7 +58,7 @@
 
         <div class="field">
             <label for="morestats">What other statistics would you like to see?</label>
-            <input type="text" id="morestats" name="morestats">
+            <input type="text" id="morestats" name="morestats" value="{{ values['more_statistics'] }}">
             {% if 'morestats' in values.errors %}
                 <p class = "help is-danger">
                     {{ values.errors['morestats'] }}
@@ -68,7 +68,7 @@
 
         <div class="field">
             <label for="comments">Other comments:</label>
-            <input type="text" id="comments" name="comments">
+            <input type="text" id="comments" name="comments" value="{{ values['comments'] }}">
             {% if 'comments' in values.errors %}
                 <p class = "help is-danger">
                     {{ values.errors['comments'] }}
