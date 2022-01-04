@@ -257,7 +257,10 @@ def validate_registration(form):
     if len(form_email) == 0:
         form.errors['email'] = "Email cannot be blank"
     else:
-        form.data['email'] = form_email
+        if Database().does_email_exist(form_email):
+            form.errors['email'] = "This email is already registered"
+        else:
+            form.data['email'] = form_email
 
     form_password = form['password']
     if len(form_password) == 0:

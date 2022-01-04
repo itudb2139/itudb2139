@@ -29,6 +29,13 @@ class Database:
             cursor.execute(query, (id,))
             connection.commit()
 
+    def does_email_exist(self, email):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT * FROM users WHERE (EMAIL = ?)"
+            cursor.execute(query, (email,))
+        return cursor.fetchone() != None
+
     # Form Table
     def add_form(self, siblings, grandparent_age, education, tobacco, alcohol, exercise, user_id):
         with sqlite3.connect(self.dbfile) as connection:
