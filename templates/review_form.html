@@ -68,7 +68,9 @@
 
         <div class="field">
             <label for="comments">Other comments:</label>
-            <input type="text" id="comments" name="comments" value="{{ values['comments'] }}">
+            <div class="field">
+                <textarea rows="5" cols="30" id="comments" name="comments" value="{{ values['comments'] }}"></textarea>
+            </div>
             {% if 'comments' in values.errors %}
                 <p class = "help is-danger">
                     {{ values.errors['comments'] }}
