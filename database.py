@@ -117,6 +117,13 @@ class Database:
             cursor.execute(query, (image, user_id))
             connection.commit()
 
+    def delete_profile(self, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "DELETE FROM profile_picture WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id, ))
+            connection.commit()
+
     def get_picture(self, user_id):
         with sqlite3.connect(self.dbfile) as connection:
             cursor = connection.cursor()
