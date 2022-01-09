@@ -101,6 +101,29 @@ class Database:
             cursor.execute(query, (user_id, ))
             connection.commit()
 
+    # Profile Picture Table
+    def add_profile(self, image, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "INSERT INTO profile_picture (PICTURE, USER_ID) VALUES (?, ?)"
+            cursor.execute(query, (image, user_id))
+            connection.commit()
+        return cursor.lastrowid
+
+    def update_profile(self, image, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "UPDATE profile_picture SET PICTURE = ? WHERE (USER_ID = ?)"
+            cursor.execute(query, (image, user_id))
+            connection.commit()
+
+    def get_picture(self, user_id):
+        with sqlite3.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "SELECT PICTURE FROM profile_picture WHERE (USER_ID = ?)"
+            cursor.execute(query, (user_id,))
+        return cursor.fetchone()
+
     # Login
     def get_password(self, email):
         with sqlite3.connect(self.dbfile) as connection:
