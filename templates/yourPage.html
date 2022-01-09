@@ -4,6 +4,32 @@
 
     <div class="content">
         <h3 class="title">Welcome, {{ current_user.data['first_name'] }}</h3>
+
+        <script type="text/javascript">
+            window.onload = function(){
+                document.getElementById('profile').addEventListener('click', function(e){
+                    document.getElementById('fileDialogId').click();
+                })
+
+                document.getElementById('fileDialogId').addEventListener('change', function(e) {
+                document.forms["profile_picture"].submit();
+                });
+            }
+        </script>
+
+        <article class="media">
+            <figure class="media-right">
+                <p class="image is-64x64">
+                    <img id="profile" src="profile_picture/{{ current_user.data['id'] }}" alt="default profile picture">
+                </p>
+            </figure>
+        </article>
+
+        <form action="/handle_profile_picture" style="display: none;" method="POST" name="profile_picture" enctype="multipart/form-data">
+			<input type="file" id="fileDialogId" name="file" />
+            <input type="submit">
+		</form>
+
         <div class="box">
             <p><b>Your profile:</b></p>
             <ul>
@@ -15,13 +41,15 @@
             </ul>
 
             <div class="field">
-                <i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
+                <p><i>If the above information is incorrect <a href="/edit">press here</a> to edit it</i></p>
             </div>
 
             <a class="button is-warning" href="/logout">Sign Out</a>
 
             <a class="button is-danger" href="/delete_user">Delete Account</a>
+
         </div>
+
     </div>
         
 

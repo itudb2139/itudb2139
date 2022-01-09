@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash, send_file
 import sqlite3
+import io
 
-from flask.helpers import url_for
+from flask.helpers import send_from_directory, url_for
 import bcrypt
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from database import Database
@@ -179,7 +180,8 @@ def statistics_edit_page():
             "average_age": form_data[1],
             "education": form_data[2],
             "tobacco": form_data[3],
-            "drinking": form_data[4]
+            "drinking": form_data[4],
+            "exercise": form_data[5]
         }
 
     return render_template("statistics_form.html", values=personal_statistics, causes=causes, handler="handle_statistics_edit")
@@ -571,6 +573,50 @@ def handle_review_edit():
 
     Database().update_review(form_experience, form_recommend, form_accuracy, form_more_statistics, form_comments, today_string, current_user.data['id'])
     return redirect(url_for('stats_page'))
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route("/handle_profile_picture", methods=['GET', 'POST'])
+def handle_profile_picture():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(url_for("your_page"))
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(url_for("your_page"))
+        if file and allowed_file(file.filename):
+            bin_file = io.BytesIO(file.read()).getvalue()
+            if Database().get_picture(current_user.data['id']) == None:
+                Database().add_profile(bin_file, current_user.data['id'])
+            else:
+                Database().update_profile(bin_file, current_user.data['id'])
+            return render_template("yourPage.html", current_user=current_user)
+    return redirect(url_for("your_page"))
+
+@app.route("/static/<path:name>")
+def serve_file(name):
+    return send_from_directory(
+        'static', name
+    )
+
+@app.route("/profile_picture/<int:user_id>")
+def get_image(user_id):
+    image = Database().get_picture(user_id=user_id)
+    if image == None:
+        return serve_file("default_profile.png")
+    return send_file(
+        io.BytesIO(image[0]),
+        mimetype='image/jpeg',
+        as_attachment=True,
+        download_name='%s.jpg' % user_id)
 
 #Function to create hash for the password
 def create_hash(password):
