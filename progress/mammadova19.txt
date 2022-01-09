@@ -75,3 +75,12 @@ Week 10:
 -Home page edited to display all global statistics
 -Functions to update and handle the edit of review form added
 -Review page edited to autofill values for edits
+
+Week 11:
+-Small corrections made
+-Table for profile picture added to the database
+-Methods to create, update and delete added to the new table
+-Your Page html edited to display the profile picture
+-Javascript added to accept file upload 
+-Uploaded file stored in the database
+-Displaying the uploaded profile picture from the database
